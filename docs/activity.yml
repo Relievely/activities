@@ -10,7 +10,7 @@ info:
 
 tags:
   - name: activity
-    description: Get information about available activites and interact with them
+    description: Get information about available activities and interact with them
 paths:
   /activity/{activityId}:
     get:
