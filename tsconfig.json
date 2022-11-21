@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": false,
+    "esModuleInterop": true,
+    "target": "ES2021",
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "sourceRoot": "src",
+    "baseUrl": "./src-old",
+    "paths": {
+      "*": [
+        "node_modules/*"
+      ]
+    },
+    "incremental": true,
+    "typeRoots": [
+      "./src/types",
+      "../node_modules/@types"
+    ]
+  },
+  "exclude": [
+    "dist/**/+"
+  ]
+}
