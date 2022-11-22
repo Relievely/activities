@@ -1,8 +1,8 @@
 import {Router} from "express";
-import {fillTablesController, initTablesController} from "../middleware/controller/tableController";
+import {fillTablesController, createTablesController} from "../middleware/controller/tableController";
 
 export const creation = Router();
 
 creation
-    .all("/create", initTablesController)
+    .all("/create", createTablesController)
     .all("/fill", fillTablesController);
