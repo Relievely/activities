@@ -108,3 +108,36 @@ export const getAllActivitiesAdapter = async (req: Request): Promise<ResponseObj
         }
     });
 }
+
+
+export const addActivityAdapter = async (name: string, category: string): Promise<ResponseObject> => {
+    return new Promise<ResponseObject>((resolve, reject) => {
+
+        const db: DatabaseType = new Database('./activities.db');
+
+        const endResult: RunResult[] = [];
+
+        const stmt = db.prepare(`INSERT INTO activity (name, category) VALUES ('${name}', '${category}')`);
+
+        try {
+            db.transaction(() => {
+            const activityResult: RunResult = stmt.run();
+            endResult.push(activityResult);
+            })();
+
+            db.close();
+
+            resolve({
+                query: "/add",
+                params: {name, category},
+                sender: "",
+                body: {
+                    length: endResult?.length ?? 0,
+                    data: endResult
+                }
+            })
+        } catch (err) {
+            reject(err);
+        }
+    });
+}
