@@ -16,7 +16,7 @@ export const createTablesAdapter = async (req: Request): Promise<ResponseObject<
         const createActivityTable: Statement = serviceDB.prepare(`CREATE TABLE IF NOT EXISTS activity
                                                 (
                                                     id INTEGER UNIQUE NOT NULL PRIMARY KEY AUTOINCREMENT,
-                                                    name     UNIQUE TEXT                                                NOT NULL,
+                                                    name     TEXT       UNIQUE                                          NOT NULL,
                                                     category TEXT CHECK ( category IN ('Guided', 'Non-Guided') ) NOT NULL
                                                 );`);
 
