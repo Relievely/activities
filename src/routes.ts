@@ -23,7 +23,6 @@ export const routes = (app: Express) => {
     app.use(bodyParser.json())
     app.use(form.any())
     app.use(creation);
-    app.use(creation);
     app.get("/all", getAllActivitiesController)
     app.get("/", (req, res) => res.send('Hello World'));
     app.get("/good", logger, (req, res) => res.status(200).json({success: 'Well done this route is working perfectly'}))
