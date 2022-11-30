@@ -43,3 +43,7 @@ export const emptyStatementResponse = new Error("Error with empty statement afte
 export const emptyResultResponse = new Error("Error with empty result after running statement!");
 
 export const serviceDB = new Database('./activities.db');
+
+export const parametersIncluded = <T>(req: Request, ...params: T[]) => {
+    return !params.find((p: T) => req.params[p.toString()] === undefined);
+}
