@@ -25,3 +25,9 @@ export interface ActivityItem {
     description: string,
     category: string
 }
+
+export interface RatingItem {
+    id?: number,
+    logId: number,
+    state: boolean
+}
