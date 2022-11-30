@@ -1,58 +1,83 @@
-import {ResponseObject} from "../../interfaces";
+import {ActivityItem, ResponseObject} from "../../interfaces";
 import {Request} from "express";
-import Database, {Database as DatabaseType, RunResult} from "better-sqlite3";
+import Database, {Database as DatabaseType, RunResult, Statement} from "better-sqlite3";
+import {
+    emptyResultResponse,
+    emptyStatementResponse,
+    responseObjectItem,
+    responseObjectItems,
+    serviceDB
+} from "../../helpers";
 
-export const createTablesAdapter = async (req: Request): Promise<ResponseObject> => {
-    return new Promise<ResponseObject>((resolve, reject) => {
-
-        const db: DatabaseType = new Database('./activities.db');
-
+export const createTablesAdapter = async (req: Request): Promise<ResponseObject<RunResult[]>> => {
+    return new Promise<ResponseObject<RunResult[]>>((resolve, reject) => {
         const endResult: RunResult[] = [];
 
-        const createActivityTable = db.prepare(`CREATE TABLE IF NOT EXISTS activity
+        const createActivityTable: Statement = serviceDB.prepare(`CREATE TABLE IF NOT EXISTS activity
                                                 (
-                                                    id       INTEGER                                             NOT NULL
-                                                        PRIMARY KEY AUTOINCREMENT,
-                                                    name     TEXT                                                NOT NULL,
+                                                    id INTEGER UNIQUE NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                                    name     UNIQUE TEXT                                                NOT NULL,
                                                     category TEXT CHECK ( category IN ('Guided', 'Non-Guided') ) NOT NULL
                                                 );`);
 
-        const createReminderTable = db.prepare(`CREATE TABLE IF NOT EXISTS reminder
+        const createReminderTable: Statement = serviceDB.prepare(`CREATE TABLE IF NOT EXISTS reminder
                                                 (
-                                                    id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                                    id   INTEGER UNIQUE NOT NULL PRIMARY KEY AUTOINCREMENT,
                                                     name TEXT    NOT NULL,
                                                     activityId INTEGER NOT NULL
-                                                )
-        `)
+                                                );`);
 
-        try {
-            db.transaction(() => {
-                const activityResult: RunResult = createActivityTable.run();
+        const createLogTable: Statement = serviceDB.prepare(`CREATE TABLE IF NOT EXISTS log
+                                                (
+                                                    id   INTEGER UNIQUE NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                                    activityId INTEGER NOT NULL,
+                                                    timeStart INTEGER NOT NULL,
+                                                    timeEnd INTEGER,
+                                                    FOREIGN KEY(activityId) REFERENCES activity(id)
+                                                );`);
+
+        const createRatingTable: Statement = serviceDB.prepare(`CREATE TABLE IF NOT EXISTS rating
+                                                (
+                                                    id   INTEGER UNIQUE NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                                    logId INTEGER NOT NULL,
+                                                    bool INTEGER NOT NULL,
+                                                    FOREIGN KEY(logId) REFERENCES log(id)
+                                                );`);
+
+        serviceDB.transaction(() => {
+            const activityResult: RunResult = createActivityTable.run();
+            if (activityResult) {
                 endResult.push(activityResult);
-                const reminderResult: RunResult = createReminderTable.run();
+            } else {
+                reject(emptyResultResponse);
+            }
+            const reminderResult: RunResult = createReminderTable.run();
+            if (reminderResult) {
                 endResult.push(reminderResult);
-            })();
+            } else {
+                reject(emptyResultResponse);
+            }
+            const logResult: RunResult = createLogTable.run();
+            if (logResult) {
+                endResult.push(logResult);
+            } else {
+                reject(emptyResultResponse);
+            }
+            const ratingTable: RunResult = createRatingTable.run();
+            if (ratingTable) {
+                endResult.push(ratingTable);
+            } else {
+                reject(emptyResultResponse);
+            }
+        })();
 
-            db.close();
-
-            resolve({
-                query: "/create",
-                params: req.params,
-                sender: "",
-                body: {
-                    length: endResult?.length ?? 0,
-                    data: endResult
-                }
-            })
-        } catch (err) {
-            reject(err);
-        }
+        resolve(responseObjectItems<RunResult>(req, endResult));
 
     })
 }
 
-export const fillTablesAdapter = async (req: Request): Promise<ResponseObject> => {
-    return new Promise<ResponseObject>((resolve, reject) => {
+export const fillTablesAdapter = async (req: Request): Promise<ResponseObject<RunResult[]>> => {
+    return new Promise<ResponseObject<RunResult[]>>((resolve, reject) => {
 
         const db: DatabaseType = new Database('./activities.db');
 
@@ -69,15 +94,7 @@ export const fillTablesAdapter = async (req: Request): Promise<ResponseObject> =
 
             db.close();
 
-            resolve({
-                query: "/fill",
-                params: req.params,
-                sender: "",
-                body: {
-                    length: endResult?.length ?? 0,
-                    data: endResult
-                }
-            })
+            resolve(responseObjectItems<RunResult>(req, endResult));
         } catch (err) {
             reject(err);
         }
@@ -85,26 +102,18 @@ export const fillTablesAdapter = async (req: Request): Promise<ResponseObject> =
     })
 }
 
-export const getAllActivitiesAdapter = async (req: Request): Promise<ResponseObject> => {
-    return new Promise<ResponseObject>((resolve, reject) => {
+export const getAllActivitiesAdapter = async (req: Request): Promise<ResponseObject<ActivityItem[]>> => {
+    return new Promise<ResponseObject<ActivityItem[]>>((resolve, reject) => {
+        const stmt: Statement = serviceDB.prepare(`SELECT * FROM activity`);
+        if (!stmt) {
+            reject(emptyStatementResponse)
+        }
 
-        const db: DatabaseType = new Database('./activities.db');
-
-        const stmt = db.prepare(`SELECT * FROM activity`);
-
-        try {
-            const results: any[] = stmt.all();
-            resolve({
-                query: "/all",
-                params: req.params,
-                sender: "",
-                body: {
-                    length: results?.length ?? 0,
-                    data: results
-                }
-            })
-        } catch (err) {
-            reject(err);
+        const results: any[] = stmt.all();
+        if (results) {
+            resolve(responseObjectItems<ActivityItem>(req, results));
+        } else {
+            reject(emptyResultResponse)
         }
     });
 }

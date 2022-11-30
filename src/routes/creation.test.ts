@@ -1,8 +1,9 @@
 import supertest, {Response} from "supertest";
 import {app} from '../app';
 
-import {describe, afterAll, it, expect} from '@jest/globals';
-import * as fs from "fs";
+import {describe, it, expect} from '@jest/globals';
+import {ResponseObject} from "../interfaces";
+import {RunResult} from "better-sqlite3";
 
 describe("Creation routes", () => {
     const requestWithSuperTest = supertest(app);
@@ -14,6 +15,9 @@ describe("Creation routes", () => {
             .expect('Content-Type', /json/)
             .then((response: Response) => {
                 expect(response).toBeDefined();
+                const changes = (response.body as ResponseObject<RunResult>).data.value.changes;
+                expect(changes).toBeGreaterThan(0);
+                expect(changes).toBeLessThanOrEqual(4);
             });
     });
 
@@ -24,6 +28,9 @@ describe("Creation routes", () => {
             .expect('Content-Type', /json/)
             .then((response: Response) => {
                 expect(response).toBeDefined();
+                const changes = (response.body as ResponseObject<RunResult>).data.value.changes;
+                expect(changes).toBeGreaterThan(0);
+                expect(changes).toBeLessThanOrEqual(1);
             });
     });
 
@@ -34,7 +41,6 @@ describe("Creation routes", () => {
             .expect('Content-Type', /json/)
             .then((response: Response) => {
                 expect(response).toBeDefined();
-                expect(response.body.body.length).toBeGreaterThan(0);
             });
     });
 });
