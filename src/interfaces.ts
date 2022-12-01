@@ -1,12 +1,27 @@
 import {ParamsDictionary} from "express-serve-static-core";
-import {RunResult} from "better-sqlite3";
+import QueryString from "qs";
+import {MediaType} from "express";
 
-export interface ResponseObject {
-    query: string | any
-    params: string[] | ParamsDictionary
-    sender: string | number
-    body: {
+type ReqBody = any;
+
+export interface ResponseObject<T> {
+    url: string,
+    route: any,
+    query: QueryString.ParsedQs,
+    params: ParamsDictionary,
+    body: ReqBody,
+    accepted: MediaType[],
+    status?: string
+    data?: {
         length: number
-        data: object | RunResult | RunResult[]
+        value: T
     },
+    error?: string
+}
+
+export interface ActivityItem {
+    id?: number,
+    name: string,
+    description: string,
+    category: string
 }
