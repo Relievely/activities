@@ -23,7 +23,7 @@ export interface ActivityItem {
     id?: number,
     name: string,
     description: string,
-    category: string
+    category: "Guided" | "Non-Guided"
 }
 
 export interface RatingItem {

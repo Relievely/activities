@@ -10,9 +10,8 @@ export const getAllActivitiesController = (req: Request, res: Response<ResponseO
         .catch((err: Error) => res.status(500).json(responseError(req, err.message)))
 }
 
-
 export const addActivityController = (req: Request, res: Response<ResponseObject<RunResult>>) => {
     addActivityAdapter(req)
         .then((response: ResponseObject<RunResult>) => res.status(200).json(response))
         .catch((err: Error) => res.status(500).json(responseError(req, err.message)))
-}
+  }

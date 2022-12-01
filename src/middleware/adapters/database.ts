@@ -120,6 +120,25 @@ export const getAllActivitiesAdapter = async (req: Request): Promise<ResponseObj
     });
 }
 
+export const addActivityAdapter = async (req: Request): Promise<ResponseObject<RunResult>> => {
+    return new Promise<ResponseObject<RunResult>>((resolve, reject) => {
+        const item: ActivityItem = req.body as ActivityItem;
+
+        const stmt: Statement<[string, string]> = serviceDB.prepare(`INSERT INTO activity (name, category) VALUES (?, ?)`);
+
+        if (!stmt) {
+            reject(emptyStatementResponse);
+        }
+
+        const activityResult: RunResult = stmt.run(item.name, item.category);
+        if (activityResult) {
+            resolve(responseObjectItem<RunResult>(req, activityResult));
+        } else {
+            reject(emptyResultResponse)
+        }
+    });
+}
+
 export const getAllRatingsAdapter = async (req: Request): Promise<ResponseObject<RatingItem[]>> => {
     return new Promise<ResponseObject<RatingItem[]>>((resolve, reject) => {
         const stmt: Statement = serviceDB.prepare(`SELECT * FROM rating`);
