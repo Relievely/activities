@@ -1,7 +1,6 @@
 import cors from "cors";
 import {Express} from "express";
 import {logger} from "./middleware/logger";
-import {addActivityController, getAllActivitiesController} from "./middleware/controller/activitiesController";
 import {creation} from "./routes/creation";
 import {activities} from "./routes/activities";
 import { rating } from "./routes/rating";
@@ -25,8 +24,7 @@ export const routes = (app: Express) => {
     app.use(bodyParser.json())
     app.use(form.any())
     app.use(creation);
-    app.use(activities);
-    app.get("/all", getAllActivitiesController);
+    app.use("/activity", activities);
     app.use("/rating", rating);
     app.get("/", (req, res) => res.send('Hello World'));
     app.get("/good", logger, (req, res) => res.status(200).json({success: 'Well done this route is working perfectly'}));

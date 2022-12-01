@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAllRatingsController, insertRatingItemController } from "../middleware/controller/RatingController";
+import { getAllRatingsController, insertRatingItemController } from "../middleware/controller/ratingController";
 
 export const rating = Router();
 
