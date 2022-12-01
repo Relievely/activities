@@ -1,5 +1,7 @@
-import {ActivityItem, RatingItem, ResponseObject} from "../../interfaces";
 import {Request} from "express";
+
+import {ActivityItem, RatingItem, ResponseObject} from "../../interfaces";
+
 import Database, {Database as DatabaseType, RunResult, Statement} from "better-sqlite3";
 import {
     emptyResultResponse,
@@ -109,7 +111,7 @@ export const getAllActivitiesAdapter = async (req: Request): Promise<ResponseObj
             reject(emptyStatementResponse)
         }
 
-        const results: any[] = stmt.all();
+        const results: ActivityItem[] = stmt.all() as ActivityItem[];
         if (results) {
             resolve(responseObjectItems<ActivityItem>(req, results));
         } else {
@@ -125,7 +127,7 @@ export const getAllRatingsAdapter = async (req: Request): Promise<ResponseObject
             reject(emptyStatementResponse)
         }
 
-        const results: any[] = stmt.all();
+        const results: RatingItem[] = stmt.all() as RatingItem[];
         if (results) {
             resolve(responseObjectItems<RatingItem>(req, results));
         } else {
@@ -137,7 +139,7 @@ export const getAllRatingsAdapter = async (req: Request): Promise<ResponseObject
 export const createRatingItemAdapter = async (req: Request): Promise<ResponseObject<RunResult>> => {
     return new Promise<ResponseObject<RunResult>>((resolve, reject) => {
 
-        const item: RatingItem = req.body as RatingItem
+        const item: RatingItem = req.body as RatingItem;
 
         const logId: number = item.logId;
         const state: boolean = item.state;
