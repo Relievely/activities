@@ -109,7 +109,7 @@ export const getAllActivitiesAdapter = async (req: Request): Promise<ResponseObj
             reject(emptyStatementResponse)
         }
 
-        const results: any[] = stmt.all();
+        const results: ActivityItem[] = stmt.all() as ActivityItem[];
         if (results) {
             resolve(responseObjectItems<ActivityItem>(req, results));
         } else {
@@ -118,35 +118,21 @@ export const getAllActivitiesAdapter = async (req: Request): Promise<ResponseObj
     });
 }
 
+export const addActivityAdapter = async (req: Request): Promise<ResponseObject<RunResult>> => {
+    return new Promise<ResponseObject<RunResult>>((resolve, reject) => {
+        const item: ActivityItem = req.body as ActivityItem;
 
-export const addActivityAdapter = async (name: string, category: string): Promise<ResponseObject> => {
-    return new Promise<ResponseObject>((resolve, reject) => {
+        const stmt: Statement<[string, string]> = serviceDB.prepare(`INSERT INTO activity (name, category) VALUES (?, ?)`);
 
-        const db: DatabaseType = new Database('./activities.db');
+        if (!stmt) {
+            reject(emptyStatementResponse);
+        }
 
-        const endResult: RunResult[] = [];
-
-        const stmt = db.prepare(`INSERT INTO activity (name, category) VALUES ('${name}', '${category}')`);
-
-        try {
-            db.transaction(() => {
-            const activityResult: RunResult = stmt.run();
-            endResult.push(activityResult);
-            })();
-
-            db.close();
-
-            resolve({
-                query: "/add",
-                params: {name, category},
-                sender: "",
-                body: {
-                    length: endResult?.length ?? 0,
-                    data: endResult
-                }
-            })
-        } catch (err) {
-            reject(err);
+        const activityResult: RunResult = stmt.run(item.name, item.category);
+        if (activityResult) {
+            resolve(responseObjectItem<RunResult>(req, activityResult));
+        } else {
+            reject(emptyResultResponse)
         }
     });
 }
