@@ -1,13 +1,8 @@
 import {Request, Response} from "express";
-import {ActivityItem, ResponseObject} from "../../interfaces";
-import {getLatestActivityAdapter} from "../adapters/database";
+import {RatingItem, ResponseObject} from "../../interfaces";
+import {createRatingItemAdapter, getAllRatingsAdapter} from "../adapters/database";
 import {responseError} from "../../helpers";
-
-export const getLatestActivityController = async (req: Request, res: Response<ResponseObject<ActivityItem>>) => {
-    getLatestActivityAdapter(req)
-        .then((response: ResponseObject<ActivityItem>) =>res.status(200).json(response))
-        .catch((err: Error) => res.status(500).json(responseError(req, err.message)))
-}
+import {RunResult} from "better-sqlite3";
 
 export const getAllRatingsController = (req: Request, res: Response<ResponseObject<RatingItem[]>>) => {
     getAllRatingsAdapter(req)
