@@ -1,8 +1,8 @@
 import {Request, Response} from "express";
 import {ActivityItem, ResponseObject} from "../../interfaces";
-import {addActivityAdapter, getAllActivitiesAdapter, getLatestActivityAdapter} from "../adapters/database";
 import {responseError} from "../../helpers";
 import {RunResult} from "better-sqlite3";
+import {addActivityAdapter, getAllActivitiesAdapter, getLatestActivityAdapter} from "../adapters/activity";
 
 export const getAllActivitiesController = (req: Request, res: Response<ResponseObject<ActivityItem[]>>) => {
     getAllActivitiesAdapter(req)

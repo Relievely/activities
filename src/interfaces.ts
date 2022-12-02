@@ -28,11 +28,11 @@ export interface ActivityItem {
 
 export interface RatingItem {
     id?: number,
-    logId: number,
+    historyId: number,
     state: boolean
 }
 
-export interface LogItem {
+export interface HistoryItem {
     id?: number,
     activityId: number,
     timeStart: number,

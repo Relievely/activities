@@ -28,7 +28,7 @@ describe("should handle item", () => {
     it("should create new note item", async () => {
         await requestWithSuperTest
             .post("/rating")
-            .send({logId: 1, state: 1})
+            .send({historyId: 1, state: 1})
             .expect(200)
             .expect('Content-Type', /json/)
             .then((response: Response) => {

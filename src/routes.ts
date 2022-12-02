@@ -8,6 +8,7 @@ import { rating } from "./routes/rating";
 import pino_http from "pino-http";
 import bodyParser from "body-parser";
 import multer, {Multer} from "multer";
+import {history} from "./routes/history";
 
 const form: Multer = multer();
 
@@ -26,6 +27,7 @@ export const routes = (app: Express) => {
     app.use(creation);
     app.use("/activity", activities);
     app.use("/rating", rating);
+    app.use("/history", history);
     app.get("/", (req, res) => res.send('Hello World'));
     app.get("/good", logger, (req, res) => res.status(200).json({success: 'Well done this route is working perfectly'}));
     app.get("/bad", (req, res) => res.status(500).json({error: 'Too bad this route does mean something does not work correctly'}));
