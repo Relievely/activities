@@ -19,7 +19,8 @@ export const createTablesAdapter = async (req: Request): Promise<ResponseObject<
                                                 (
                                                     id INTEGER UNIQUE NOT NULL PRIMARY KEY AUTOINCREMENT,
                                                     name     TEXT       UNIQUE                                          NOT NULL,
-                                                    category TEXT CHECK ( category IN ('Guided', 'Non-Guided') ) NOT NULL
+                                                    category TEXT CHECK ( category IN ('Guided', 'Non-Guided') ) NOT NULL,
+                                                    description TEXT NOT NULL
                                                 );`);
 
         const createReminderTable: Statement = serviceDB.prepare(`CREATE TABLE IF NOT EXISTS reminder
@@ -85,8 +86,8 @@ export const fillTablesAdapter = async (req: Request): Promise<ResponseObject<Ru
 
         const endResult: RunResult[] = [];
 
-        const fillActivityTable = db.prepare(`INSERT INTO activity (name, category)
-                                              VALUES ('Breath', 'Guided'), ('Walking', 'Non-Guided'), ('Cooking', 'Non-Guided')`);
+        const fillActivityTable = db.prepare(`INSERT INTO activity (name, category, description)
+                                              VALUES ('Breath', 'Guided', 'Take some deep breaths to calm yourself down'), ('Walking', 'Non-Guided', 'take a walk and distract yourself from your stress'), ('Cooking', 'Non-Guided', 'make yourself a healthy meal and care for yourself')`);
 
         try {
             db.transaction(() => {
