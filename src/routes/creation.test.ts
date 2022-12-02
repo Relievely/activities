@@ -1,29 +1,34 @@
 import supertest, {Response} from "supertest";
 import {app} from '../app';
 
-import {describe, afterAll, it, expect} from '@jest/globals';
-import * as fs from "fs";
+import {describe, it, expect} from '@jest/globals';
+import {ResponseObject} from "../interfaces";
+import {RunResult} from "better-sqlite3";
 
 describe("Creation routes", () => {
     const requestWithSuperTest = supertest(app);
 
-    it("should return a 200 response", async () => {
+    it("should create tables with data", async () => {
         await requestWithSuperTest
             .get("/create")
             .expect(200)
             .expect('Content-Type', /json/)
-            .then((response: Response) => {
+            .then(async (response: Response) => {
                 expect(response).toBeDefined();
-            });
-    });
+                const length = (response.body as ResponseObject<RunResult[]>).data.length;
+                expect(length).toBeGreaterThanOrEqual(0);
+                expect(length).toBeLessThanOrEqual(4);
 
-    it("should return a 200 response", async () => {
-        await requestWithSuperTest
-            .get("/fill")
-            .expect(200)
-            .expect('Content-Type', /json/)
-            .then((response: Response) => {
-                expect(response).toBeDefined();
+                await requestWithSuperTest
+                    .get("/fill")
+                    .expect(200)
+                    .expect('Content-Type', /json/)
+                    .then((response: Response) => {
+                        expect(response).toBeDefined();
+                        const fillLength = (response.body as ResponseObject<RunResult[]>).data.length;
+                        expect(fillLength).toBeGreaterThanOrEqual(0);
+                        expect(fillLength).toBeLessThanOrEqual(1);
+                    });
             });
     });
 
@@ -34,7 +39,8 @@ describe("Creation routes", () => {
             .expect('Content-Type', /json/)
             .then((response: Response) => {
                 expect(response).toBeDefined();
-                expect(response.body.body.length).toBeGreaterThan(0);
+                const allLength = (response.body as ResponseObject<RunResult[]>).data.length;
+                expect(allLength).toBeGreaterThanOrEqual(0);
             });
     });
 });

@@ -1,16 +1,3 @@
-<<<<<<< Updated upstream
-import {ParamsDictionary} from "express-serve-static-core";
-import {RunResult} from "better-sqlite3";
-
-export interface ResponseObject {
-    query: string | any
-    params: string[] | ParamsDictionary
-    sender: string | number
-    body: {
-        length: number
-        data: object | RunResult | RunResult[]
-    },
-=======
 import {ParamsDictionary} from "express-serve-static-core";
 import QueryString from "qs";
 import {MediaType} from "express";
@@ -36,7 +23,13 @@ export interface ActivityItem {
     id?: number,
     name: string,
     description: string,
-    category: string
+    category: "Guided" | "Non-Guided"
+}
+
+export interface RatingItem {
+    id?: number,
+    logId: number,
+    state: boolean
 }
 
 export interface LogItem {
@@ -44,11 +37,4 @@ export interface LogItem {
     activityId: number,
     timeStart: number,
     timeEnd: number
-}
-
-export interface RatingItem {
-    id?: number,
-    logId: number,
-    bool: number
->>>>>>> Stashed changes
 }
