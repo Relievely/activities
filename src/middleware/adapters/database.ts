@@ -1,5 +1,7 @@
-import {ActivityItem, ResponseObject} from "../../interfaces";
 import {Request} from "express";
+
+import {ActivityItem, RatingItem, ResponseObject} from "../../interfaces";
+
 import Database, {Database as DatabaseType, RunResult, Statement} from "better-sqlite3";
 import {
     emptyResultResponse,
@@ -40,7 +42,7 @@ export const createTablesAdapter = async (req: Request): Promise<ResponseObject<
                                                 (
                                                     id   INTEGER UNIQUE NOT NULL PRIMARY KEY AUTOINCREMENT,
                                                     logId INTEGER NOT NULL,
-                                                    bool INTEGER NOT NULL,
+                                                    state INTEGER NOT NULL,
                                                     FOREIGN KEY(logId) REFERENCES log(id)
                                                 );`);
 
@@ -136,3 +138,42 @@ export const addActivityAdapter = async (req: Request): Promise<ResponseObject<R
         }
     });
 }
+
+export const getAllRatingsAdapter = async (req: Request): Promise<ResponseObject<RatingItem[]>> => {
+    return new Promise<ResponseObject<RatingItem[]>>((resolve, reject) => {
+        const stmt: Statement = serviceDB.prepare(`SELECT * FROM rating`);
+        if (!stmt) {
+            reject(emptyStatementResponse)
+        }
+
+        const results: RatingItem[] = stmt.all() as RatingItem[];
+        if (results) {
+            resolve(responseObjectItems<RatingItem>(req, results));
+        } else {
+            reject(emptyResultResponse)
+        }
+    });
+}
+
+export const createRatingItemAdapter = async (req: Request): Promise<ResponseObject<RunResult>> => {
+    return new Promise<ResponseObject<RunResult>>((resolve, reject) => {
+
+        const item: RatingItem = req.body as RatingItem;
+
+        const logId: number = item.logId;
+        const state: boolean = item.state;
+        const stmt: Statement<[number, boolean]> = serviceDB.prepare(`INSERT INTO rating (logId, state) VALUES (?, ?)`);
+
+        if (!stmt) {
+            reject(emptyStatementResponse);
+        }
+
+        const result: RunResult = stmt.run(logId, state);
+        if (result) {
+            resolve(responseObjectItem<RunResult>(req, result))
+        } else {
+            reject(emptyResultResponse);
+        }
+    });
+}
+

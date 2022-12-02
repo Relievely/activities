@@ -25,3 +25,9 @@ export interface ActivityItem {
     description: string,
     category: "Guided" | "Non-Guided"
 }
+
+export interface RatingItem {
+    id?: number,
+    logId: number,
+    state: boolean
+}

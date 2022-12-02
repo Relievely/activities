@@ -14,4 +14,4 @@ export const addActivityController = (req: Request, res: Response<ResponseObject
     addActivityAdapter(req)
         .then((response: ResponseObject<RunResult>) => res.status(200).json(response))
         .catch((err: Error) => res.status(500).json(responseError(req, err.message)))
-  }
+}
