@@ -1,9 +1,15 @@
 import {Request} from "express";
 
-import {ResponseObject} from "../../interfaces";
+import {ActivityItem, RatingItem, ResponseObject} from "../../interfaces";
 
-import {RunResult, Statement} from "better-sqlite3";
-import {emptyResultResponse, responseObjectItems, serviceDB} from "../../helpers";
+import Database, {Database as DatabaseType, RunResult, Statement} from "better-sqlite3";
+import {
+    emptyResultResponse,
+    emptyStatementResponse,
+    responseObjectItem,
+    responseObjectItems,
+    serviceDB
+} from "../../helpers";
 
 export const createTablesAdapter = async (req: Request): Promise<ResponseObject<RunResult[]>> => {
     return new Promise<ResponseObject<RunResult[]>>((resolve, reject) => {
@@ -13,7 +19,8 @@ export const createTablesAdapter = async (req: Request): Promise<ResponseObject<
                                                 (
                                                     id INTEGER UNIQUE NOT NULL PRIMARY KEY AUTOINCREMENT,
                                                     name     TEXT       UNIQUE                                          NOT NULL,
-                                                    category TEXT CHECK ( category IN ('Guided', 'Non-Guided') ) NOT NULL
+                                                    category TEXT CHECK ( category IN ('Guided', 'Non-Guided') ) NOT NULL,
+                                                    description TEXT NOT NULL
                                                 );`);
 
         const createReminderTable: Statement = serviceDB.prepare(`CREATE TABLE IF NOT EXISTS reminder
@@ -22,6 +29,7 @@ export const createTablesAdapter = async (req: Request): Promise<ResponseObject<
                                                     name TEXT    NOT NULL,
                                                     activityId INTEGER NOT NULL
                                                 );`);
+
 
         const createHistoryTable: Statement = serviceDB.prepare(`CREATE TABLE IF NOT EXISTS history
                                                 (
@@ -53,6 +61,7 @@ export const createTablesAdapter = async (req: Request): Promise<ResponseObject<
             } else {
                 reject(emptyResultResponse);
             }
+
             const historyTableResult: RunResult = createHistoryTable.run();
             if (historyTableResult) {
                 endResult.push(historyTableResult);
@@ -77,10 +86,8 @@ export const fillTablesAdapter = async (req: Request): Promise<ResponseObject<Ru
 
         const endResult: RunResult[] = [];
 
-        const fillActivityTable = serviceDB.prepare(`INSERT OR IGNORE INTO activity (name, category)
-                                              VALUES ('Breath', 'Guided'),
-                                                     ('Walking', 'Non-Guided'),
-                                                     ('Cooking', 'Non-Guided')`);
+        const fillActivityTable = serviceDB.prepare(`INSERT INTO activity (name, category, description)
+                                              VALUES ('Breath', 'Guided', 'Take some deep breaths to calm yourself down'), ('Walking', 'Non-Guided', 'take a walk and distract yourself from your stress'), ('Cooking', 'Non-Guided', 'make yourself a healthy meal and care for yourself')`);
 
         try {
             serviceDB.transaction(() => {
@@ -96,3 +103,75 @@ export const fillTablesAdapter = async (req: Request): Promise<ResponseObject<Ru
     })
 }
 
+export const getAllActivitiesAdapter = async (req: Request): Promise<ResponseObject<ActivityItem[]>> => {
+    return new Promise<ResponseObject<ActivityItem[]>>((resolve, reject) => {
+        const stmt: Statement = serviceDB.prepare(`SELECT * FROM activity`);
+        if (!stmt) {
+            reject(emptyStatementResponse)
+        }
+
+        const results: ActivityItem[] = stmt.all() as ActivityItem[];
+        if (results) {
+            resolve(responseObjectItems<ActivityItem>(req, results));
+        } else {
+            reject(emptyResultResponse)
+        }
+    });
+}
+
+export const addActivityAdapter = async (req: Request): Promise<ResponseObject<RunResult>> => {
+    return new Promise<ResponseObject<RunResult>>((resolve, reject) => {
+        const item: ActivityItem = req.body as ActivityItem;
+
+        const stmt: Statement<[string, string]> = serviceDB.prepare(`INSERT INTO activity (name, category) VALUES (?, ?)`);
+
+        if (!stmt) {
+            reject(emptyStatementResponse);
+        }
+
+        const activityResult: RunResult = stmt.run(item.name, item.category);
+        if (activityResult) {
+            resolve(responseObjectItem<RunResult>(req, activityResult));
+        } else {
+            reject(emptyResultResponse)
+        }
+    });
+}
+
+export const getAllRatingsAdapter = async (req: Request): Promise<ResponseObject<RatingItem[]>> => {
+    return new Promise<ResponseObject<RatingItem[]>>((resolve, reject) => {
+        const stmt: Statement = serviceDB.prepare(`SELECT * FROM rating`);
+        if (!stmt) {
+            reject(emptyStatementResponse)
+        }
+
+        const results: RatingItem[] = stmt.all() as RatingItem[];
+        if (results) {
+            resolve(responseObjectItems<RatingItem>(req, results));
+        } else {
+            reject(emptyResultResponse)
+        }
+    });
+}
+
+export const createRatingItemAdapter = async (req: Request): Promise<ResponseObject<RunResult>> => {
+    return new Promise<ResponseObject<RunResult>>((resolve, reject) => {
+
+        const item: RatingItem = req.body as RatingItem;
+
+        const logId: number = item.logId;
+        const state: boolean = item.state;
+        const stmt: Statement<[number, boolean]> = serviceDB.prepare(`INSERT INTO rating (logId, state) VALUES (?, ?)`);
+
+        if (!stmt) {
+            reject(emptyStatementResponse);
+        }
+
+        const result: RunResult = stmt.run(logId, state);
+        if (result) {
+            resolve(responseObjectItem<RunResult>(req, result))
+        } else {
+            reject(emptyResultResponse);
+        }
+    });
+}
