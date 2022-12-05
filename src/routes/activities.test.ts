@@ -46,6 +46,7 @@ describe("Activities routes", () => {
                 expect(body).toBeDefined();
                 const length = body.data.length;
                 expect(length).toBeGreaterThanOrEqual(0);
+                expect(length).toBeLessThanOrEqual(3);
             });
     });
 });
