@@ -86,8 +86,11 @@ export const fillTablesAdapter = async (req: Request): Promise<ResponseObject<Ru
 
         const endResult: RunResult[] = [];
 
-        const fillActivityTable = serviceDB.prepare(`INSERT INTO activity (name, category, description)
-                                              VALUES ('Breath', 'Guided', 'Take some deep breaths to calm yourself down'), ('Walking', 'Non-Guided', 'take a walk and distract yourself from your stress'), ('Cooking', 'Non-Guided', 'make yourself a healthy meal and care for yourself')`);
+        const fillActivityTable = serviceDB.prepare(`INSERT OR IGNORE INTO activity (name, category, description)
+                                              VALUES ('Breath', 'Guided', 'Take some deep breaths to calm yourself down'),
+                                               ('Walking', 'Non-Guided', 'Take a walk and distract yourself from your stress'),
+                                                ('Cooking', 'Non-Guided', 'Make yourself a healthy meal and care for yourself')
+                                                `);
 
         try {
             serviceDB.transaction(() => {
