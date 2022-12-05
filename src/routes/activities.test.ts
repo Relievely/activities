@@ -4,11 +4,9 @@ import {app} from "../app";
 import {ActivityItem, ResponseObject} from "../interfaces";
 import {RunResult} from "better-sqlite3";
 
-
+const requestWithSuperTest = supertest(app);
 
 beforeAll(async () => {
-    const requestWithSuperTest = supertest(app);
-
     await requestWithSuperTest
         .get("/create")
         .expect(200)
@@ -18,14 +16,9 @@ beforeAll(async () => {
             const length = (response.body as ResponseObject<RunResult[]>).data.length;
             expect(length).toBeGreaterThanOrEqual(0);
             expect(length).toBeLessThanOrEqual(4);
-
         });
 });
 describe("Activities routes", () => {
-
-    const requestWithSuperTest = supertest(app);
-
-
     it("should return latest activity item that was logged", async () => {
         await requestWithSuperTest
             .get("/activity/latest")
@@ -47,6 +40,4 @@ describe("Activities routes", () => {
                 expect((response.body as ResponseObject<ActivityItem[]>).body).toBeDefined();
             });
     });
-
-
 });
