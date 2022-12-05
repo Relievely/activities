@@ -1,11 +1,14 @@
-import {describe, it, expect} from '@jest/globals';
+import {describe, it, expect, beforeAll} from '@jest/globals';
 import { RunResult } from 'better-sqlite3';
 import supertest, {Response} from 'supertest';
 import { app } from '../app';
 import { RatingItem, ResponseObject } from '../interfaces';
+import {databaseInit} from "./jestPresets";
+
+const requestWithSuperTest = supertest(app);
+beforeAll(() => databaseInit());
 
 describe("Rating routes", () => {
-    const requestWithSuperTest = supertest(app);
     it("should return all rating items", async () => {
         await requestWithSuperTest
             .get("/rating")
@@ -18,11 +21,7 @@ describe("Rating routes", () => {
     });
 });
 
-
-
 describe("should handle item", () => {
-    const requestWithSuperTest = supertest(app);
-
     let newID: number | bigint = 0;
 
     it("should create new note item", async () => {

@@ -2,22 +2,11 @@ import {describe, expect, it, beforeAll} from "@jest/globals";
 import supertest, {Response} from "supertest";
 import {app} from "../app";
 import {ActivityItem, ResponseObject} from "../interfaces";
-import {RunResult} from "better-sqlite3";
+import {databaseInit} from "./jestPresets";
 
 const requestWithSuperTest = supertest(app);
 
-beforeAll(async () => {
-    await requestWithSuperTest
-        .get("/create")
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .then((response: Response) => {
-            expect(response).toBeDefined();
-            const length = (response.body as ResponseObject<RunResult[]>).data.length;
-            expect(length).toBeGreaterThanOrEqual(0);
-            expect(length).toBeLessThanOrEqual(4);
-        });
-});
+beforeAll(() => databaseInit());
 describe("Activities routes", () => {
     it("should return latest activity item that was logged", async () => {
         await requestWithSuperTest
