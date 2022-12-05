@@ -3,7 +3,7 @@ import {ActivityItem, ResponseObject} from "../../interfaces";
 import {RunResult, Statement} from "better-sqlite3";
 import {
     emptyResultResponse,
-    emptyStatementResponse,
+    emptyStatementResponse, insufficientParametersError, parametersIncluded,
     responseObjectItem,
     responseObjectItems,
     serviceDB
@@ -28,13 +28,13 @@ export const addActivityAdapter = async (req: Request): Promise<ResponseObject<R
     return new Promise<ResponseObject<RunResult>>((resolve, reject) => {
         const item: ActivityItem = req.body as ActivityItem;
 
-        const stmt: Statement<[string, string]> = serviceDB.prepare(`INSERT INTO activity (name, category) VALUES (?, ?)`);
+        const stmt: Statement<[string, string, string]> = serviceDB.prepare(`INSERT INTO activity (name, category, description) VALUES (?, ?, ?)`);
 
         if (!stmt) {
             reject(emptyStatementResponse);
         }
 
-        const activityResult: RunResult = stmt.run(item.name, item.category);
+        const activityResult: RunResult = stmt.run(item.name, item.category, item.description);
         if (activityResult) {
             resolve(responseObjectItem<RunResult>(req, activityResult));
         } else {
@@ -56,6 +56,26 @@ export const getLatestActivityAdapter = async (req: Request): Promise<ResponseOb
         const result: ActivityItem = stmt.get() as ActivityItem;
         if (result) {
             resolve(responseObjectItem<ActivityItem>(req, result));
+        } else {
+            reject(emptyResultResponse)
+        }
+    });
+}
+
+export const getCategoryActivityAdapter = async (req: Request): Promise<ResponseObject<ActivityItem[]>> => {
+    return new Promise<ResponseObject<ActivityItem[]>>((resolve, reject) => {
+
+        const stmt = serviceDB.prepare<string>(`SELECT * FROM activity WHERE category = ?`);
+
+        if (!stmt) {
+            reject(emptyStatementResponse);
+        }
+        if (!parametersIncluded<string>(req, "category")) {
+            reject(insufficientParametersError)
+        }
+        const result: ActivityItem[] = stmt.all(req.params.category) as ActivityItem[];
+        if (result) {
+            resolve(responseObjectItem<ActivityItem[]>(req, result))
         } else {
             reject(emptyResultResponse)
         }

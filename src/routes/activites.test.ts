@@ -48,5 +48,24 @@ describe("Activities routes", () => {
                         expect((response.body as ResponseObject<RatingItem>).body).toBeDefined();
                     });
             });
+    });
+    it("should return array of activities with specific category", async () => {
+        await requestWithSuperTest
+            .put("/activity/add")
+            .send({name: "something", category: "Guided", description: "do something where we guide you"})
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then(async (response: Response) => {
+                expect(response).toBeDefined();
+                await requestWithSuperTest
+                    .get("/activity/:category")
+                    .send({category: "Guided"})
+                    .expect(200)
+                    .expect('Content-Type', /json/)
+                    .then((response: Response) => {
+                        expect(response).toBeDefined();
+                        expect((response.body as ResponseObject<RatingItem>).body).toBeDefined();
+                    });
+            });
     })
 });
