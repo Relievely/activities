@@ -1,14 +1,13 @@
+import {describe, expect, it, beforeAll} from "@jest/globals";
 import supertest, {Response} from "supertest";
-import {app} from '../app';
-
-import {describe, it, expect} from '@jest/globals';
-import {ResponseObject} from "../interfaces";
+import {app} from "../app";
+import {RatingItem, ResponseObject} from "../interfaces";
 import {RunResult} from "better-sqlite3";
 
-describe("Creation routes", () => {
+describe("Activities routes", () => {
     const requestWithSuperTest = supertest(app);
 
-    it("should create tables with data", async () => {
+    beforeAll(async () => {
         await requestWithSuperTest
             .get("/create")
             .expect(200)
@@ -31,5 +30,23 @@ describe("Creation routes", () => {
                     });
             });
     });
-});
 
+    it("should return latest activity item that was logged", async () => {
+        await requestWithSuperTest
+            .put("/history")
+            .send({activityId: 1, timeStart: 3453455345, timeEnd: 3453455350})
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then(async (response: Response) => {
+                expect(response).toBeDefined();
+                await requestWithSuperTest
+                    .get("/activity/latest")
+                    .expect(200)
+                    .expect('Content-Type', /json/)
+                    .then((latestActivityResponse: Response) => {
+                        expect(latestActivityResponse).toBeDefined();
+                        expect((latestActivityResponse.body as ResponseObject<RatingItem>).body).toBeDefined();
+                    });
+            });
+    })
+});
