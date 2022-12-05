@@ -159,15 +159,15 @@ export const createRatingItemAdapter = async (req: Request): Promise<ResponseObj
 
         const item: RatingItem = req.body as RatingItem;
 
-        const logId: number = item.logId;
+        const historyId: number = item.historyId;
         const state: boolean = item.state;
-        const stmt: Statement<[number, boolean]> = serviceDB.prepare(`INSERT INTO rating (logId, state) VALUES (?, ?)`);
+        const stmt: Statement<[number, boolean]> = serviceDB.prepare(`INSERT INTO rating (historyId, state) VALUES (?, ?)`);
 
         if (!stmt) {
             reject(emptyStatementResponse);
         }
 
-        const result: RunResult = stmt.run(logId, state);
+        const result: RunResult = stmt.run(historyId, state);
         if (result) {
             resolve(responseObjectItem<RunResult>(req, result))
         } else {
