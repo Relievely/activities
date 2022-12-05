@@ -1,27 +1,26 @@
 import {describe, it, expect, beforeAll} from '@jest/globals';
-import { RunResult } from 'better-sqlite3';
+import {RunResult} from 'better-sqlite3';
 import supertest, {Response} from 'supertest';
-import { app } from '../app';
-import { RatingItem, ResponseObject } from '../interfaces';
+import {app} from '../app';
+import {ResponseObject} from '../interfaces';
 import {databaseInit} from "./jestPresets";
 
 const requestWithSuperTest = supertest(app);
-beforeAll(() => databaseInit());
-
-describe("Rating routes", () => {
-    it("should return all rating items", async () => {
-        await requestWithSuperTest
-            .get("/rating")
-            .expect(200)
-            .expect('Content-Type', /json/)
-            .then((response: Response) => {
-                expect(response).toBeDefined();
-                expect((response.body as ResponseObject<RatingItem>).body).toBeDefined();
-            });
-    });
+beforeAll(async () => {
+    await databaseInit();
+    await requestWithSuperTest
+        .put("/history")
+        .send({activityId: 1, timeStart: 3453455345, timeEnd: 3453455350})
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .then((response: Response) => {
+            expect(response).toBeDefined();
+            const body = response.body as ResponseObject<RunResult>;
+            expect(body).toBeDefined();
+        });
 });
 
-describe("should handle item", () => {
+describe("should handle items", () => {
     let newID: number | bigint = 0;
 
     it("should create new note item", async () => {
@@ -35,4 +34,17 @@ describe("should handle item", () => {
                 newID = (response.body as ResponseObject<RunResult>).data.value.lastInsertRowid;
             })
     })
+
+    it("should return all rating items", async () => {
+        await requestWithSuperTest
+            .get("/rating")
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((response: Response) => {
+                expect(response).toBeDefined();
+                const body = response.body as ResponseObject<RunResult[]>;
+                expect(body).toBeDefined();
+                expect(body.data.length).toBeGreaterThanOrEqual(0);
+            });
+    });
 });
