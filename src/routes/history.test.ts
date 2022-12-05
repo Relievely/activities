@@ -1,14 +1,13 @@
+import {beforeAll, describe, expect, it} from "@jest/globals";
 import supertest, {Response} from "supertest";
-import {app} from '../app';
-
-import {describe, it, expect} from '@jest/globals';
+import {app} from "../app";
 import {ResponseObject} from "../interfaces";
 import {RunResult} from "better-sqlite3";
 
-describe("Creation routes", () => {
+describe("Log routes", () => {
     const requestWithSuperTest = supertest(app);
 
-    it("should create tables with data", async () => {
+    beforeAll(async () => {
         await requestWithSuperTest
             .get("/create")
             .expect(200)
@@ -23,7 +22,7 @@ describe("Creation routes", () => {
                     .get("/fill")
                     .expect(200)
                     .expect('Content-Type', /json/)
-                    .then((response: Response) => {
+                    .then(async (response: Response) => {
                         expect(response).toBeDefined();
                         const fillLength = (response.body as ResponseObject<RunResult[]>).data.length;
                         expect(fillLength).toBeGreaterThanOrEqual(0);
@@ -31,5 +30,15 @@ describe("Creation routes", () => {
                     });
             });
     });
-});
 
+    it("should create new history item", async() => {
+        await requestWithSuperTest
+            .put("/history")
+            .send({activityId: 1, timeStart: 3453455345, timeEnd: 3453455350})
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then(async (response: Response) => {
+                expect(response).toBeDefined();
+            });
+    })
+});

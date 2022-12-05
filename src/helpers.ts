@@ -44,6 +44,8 @@ export const emptyResultResponse = new Error("Error with empty result after runn
 
 export const serviceDB = new Database('./activities.db');
 
+export const insufficientParametersError = () => new Error("Error while checking validity of parameters");
+
 export const parametersIncluded = <T>(req: Request, ...params: T[]) => {
     return !params.find((p: T) => req.params[p.toString()] === undefined);
 }
