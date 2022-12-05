@@ -22,11 +22,11 @@ describe("Activities routes", () => {
                     .get("/fill")
                     .expect(200)
                     .expect('Content-Type', /json/)
-                    .then(async (response: Response) => {
-                        expect(response).toBeDefined();
+                    .then((fillResponse: Response) => {
+                        expect(fillResponse).toBeDefined();
                         const fillLength = (response.body as ResponseObject<RunResult[]>).data.length;
                         expect(fillLength).toBeGreaterThanOrEqual(0);
-                        expect(fillLength).toBeLessThanOrEqual(1);
+                        expect(fillLength).toBeLessThanOrEqual(4);
                     });
             });
     });
@@ -43,9 +43,9 @@ describe("Activities routes", () => {
                     .get("/activity/latest")
                     .expect(200)
                     .expect('Content-Type', /json/)
-                    .then((response: Response) => {
-                        expect(response).toBeDefined();
-                        expect((response.body as ResponseObject<RatingItem>).body).toBeDefined();
+                    .then((latestActivityResponse: Response) => {
+                        expect(latestActivityResponse).toBeDefined();
+                        expect((latestActivityResponse.body as ResponseObject<RatingItem>).body).toBeDefined();
                     });
             });
     })

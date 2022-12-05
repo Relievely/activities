@@ -23,11 +23,11 @@ describe("Creation routes", () => {
                     .get("/fill")
                     .expect(200)
                     .expect('Content-Type', /json/)
-                    .then((response: Response) => {
-                        expect(response).toBeDefined();
+                    .then((fillResponse: Response) => {
+                        expect(fillResponse).toBeDefined();
                         const fillLength = (response.body as ResponseObject<RunResult[]>).data.length;
                         expect(fillLength).toBeGreaterThanOrEqual(0);
-                        expect(fillLength).toBeLessThanOrEqual(1);
+                        expect(fillLength).toBeLessThanOrEqual(4);
                     });
             });
     });
