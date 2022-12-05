@@ -1,8 +1,8 @@
-import { RunResult } from "better-sqlite3";
-import { Request, Response } from "express";
-import { responseError } from "../../helpers";
-import { RatingItem, ResponseObject } from "../../interfaces";
-import { createRatingItemAdapter, getAllRatingsAdapter } from "../adapters/database";
+import {Request, Response} from "express";
+import {RatingItem, ResponseObject} from "../../interfaces";
+import {responseError} from "../../helpers";
+import {RunResult} from "better-sqlite3";
+import {createRatingItemAdapter, getAllRatingsAdapter} from "../adapters/rating";
 
 export const getAllRatingsController = (req: Request, res: Response<ResponseObject<RatingItem[]>>) => {
     getAllRatingsAdapter(req)

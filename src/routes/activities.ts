@@ -1,9 +1,14 @@
 import {Router} from "express";
-import {addActivityController, getAllActivitiesController} from "../middleware/controller/activitiesController";
+import {
+    addActivityController,
+    getAllActivitiesController,
+    getLatestActivityController
+} from "../middleware/controller/activitiesController";
 
 
 export const activities = Router();
 
 activities
     .get("/", getAllActivitiesController)
-    .post("/add", addActivityController);
+    .post("/add", addActivityController)
+    .get("/latest", getLatestActivityController)
