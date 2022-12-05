@@ -2,7 +2,12 @@ import {Request, Response} from "express";
 import {ActivityItem, ResponseObject} from "../../interfaces";
 import {responseError} from "../../helpers";
 import {RunResult} from "better-sqlite3";
-import {addActivityAdapter, getAllActivitiesAdapter, getLatestActivityAdapter} from "../adapters/activity";
+import {
+    addActivityAdapter,
+    getAllActivitiesAdapter,
+    getLatestActivityAdapter,
+    getPreviousActivitiesAdapter
+} from "../adapters/activity";
 
 export const getAllActivitiesController = (req: Request, res: Response<ResponseObject<ActivityItem[]>>) => {
     getAllActivitiesAdapter(req)
@@ -15,8 +20,14 @@ export const addActivityController = (req: Request, res: Response<ResponseObject
         .then((response: ResponseObject<RunResult>) => res.status(200).json(response))
         .catch((err: Error) => res.status(500).json(responseError(req, err.message)))
 }
-export const getLatestActivityController = async (req: Request, res: Response<ResponseObject<ActivityItem>>) => {
+export const getLatestActivityController = (req: Request, res: Response<ResponseObject<ActivityItem>>) => {
     getLatestActivityAdapter(req)
         .then((response: ResponseObject<ActivityItem>) => res.status(200).json(response))
+        .catch((err: Error) => res.status(500).json(responseError(req, err.message)))
+}
+
+export const getPreviousActivitiesController = (req: Request, res: Response<ResponseObject<ActivityItem[]>>) => {
+    getPreviousActivitiesAdapter(req)
+        .then((response: ResponseObject<ActivityItem[]>) => res.status(200).json(response))
         .catch((err: Error) => res.status(500).json(responseError(req, err.message)))
 }

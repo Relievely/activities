@@ -2,7 +2,7 @@ import {Router} from "express";
 import {
     addActivityController,
     getAllActivitiesController,
-    getLatestActivityController
+    getLatestActivityController, getPreviousActivitiesController
 } from "../middleware/controller/activitiesController";
 
 
@@ -12,3 +12,4 @@ activities
     .get("/", getAllActivitiesController)
     .post("/add", addActivityController)
     .get("/latest", getLatestActivityController)
+    .get("/previous",getPreviousActivitiesController)

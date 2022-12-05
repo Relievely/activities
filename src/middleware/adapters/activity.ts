@@ -28,13 +28,13 @@ export const addActivityAdapter = async (req: Request): Promise<ResponseObject<R
     return new Promise<ResponseObject<RunResult>>((resolve, reject) => {
         const item: ActivityItem = req.body as ActivityItem;
 
-        const stmt: Statement<[string, string]> = serviceDB.prepare(`INSERT INTO activity (name, category) VALUES (?, ?)`);
+        const stmt: Statement<[string, string, string]> = serviceDB.prepare(`INSERT INTO activity (name, category, description) VALUES (?, ?, ?)`);
 
         if (!stmt) {
             reject(emptyStatementResponse);
         }
 
-        const activityResult: RunResult = stmt.run(item.name, item.category);
+        const activityResult: RunResult = stmt.run(item.name, item.category, item.description);
         if (activityResult) {
             resolve(responseObjectItem<RunResult>(req, activityResult));
         } else {
@@ -56,6 +56,25 @@ export const getLatestActivityAdapter = async (req: Request): Promise<ResponseOb
         const result: ActivityItem = stmt.get() as ActivityItem;
         if (result) {
             resolve(responseObjectItem<ActivityItem>(req, result));
+        } else {
+            reject(emptyResultResponse)
+        }
+    });
+}
+
+export const getPreviousActivitiesAdapter = async (req: Request): Promise<ResponseObject<ActivityItem[]>> => {
+    return new Promise<ResponseObject<ActivityItem[]>>((resolve, reject) => {
+        const stmt: Statement = serviceDB.prepare(  `SELECT activity.*
+                                                            FROM activity
+                                                            JOIN history ON activity.id = history.activityId
+                                                            ORDER by id desc LIMIT 3;;`);
+        if (!stmt) {
+            reject(emptyStatementResponse)
+        }
+
+        const results: ActivityItem[] = stmt.all() as ActivityItem[];
+        if (results) {
+            resolve(responseObjectItems<ActivityItem>(req, results));
         } else {
             reject(emptyResultResponse)
         }
