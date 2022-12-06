@@ -6,7 +6,7 @@ import {
     addActivityAdapter,
     getActivityItemAdapter,
     getAllActivitiesAdapter,
-    getLatestActivityAdapter
+    getPreviousActivitiesAdapter
 } from "../adapters/activity";
 
 export const getAllActivitiesController = (req: Request, res: Response<ResponseObject<ActivityItem[]>>) => {
@@ -20,9 +20,11 @@ export const addActivityController = (req: Request, res: Response<ResponseObject
         .then((response: ResponseObject<RunResult>) => res.status(200).json(response))
         .catch((err: Error) => res.status(500).json(responseError(req, err.message)))
 }
-export const getLatestActivityController = (req: Request, res: Response<ResponseObject<ActivityItem>>) => {
-    getLatestActivityAdapter(req)
-        .then((response: ResponseObject<ActivityItem>) => res.status(200).json(response))
+
+
+export const getPreviousActivitiesController = (req: Request, res: Response<ResponseObject<ActivityItem[]>>) => {
+    getPreviousActivitiesAdapter(req)
+        .then((response: ResponseObject<ActivityItem[]>) => res.status(200).json(response))
         .catch((err: Error) => res.status(500).json(responseError(req, err.message)))
 }
 
