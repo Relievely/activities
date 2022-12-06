@@ -21,9 +21,26 @@ beforeAll(async () => {
         });
 });
 describe("Activities routes", () => {
-    it("should return Previous activities items", async () => {
+    let newLimit: number | bigint = 0
+    it("should return latest activity item that was logged", async () => {
+        newLimit = 1
         await requestWithSuperTest
-            .get("/activity/previous/2")
+            .get(`/activity/previous/${newLimit}`)
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((response: Response) => {
+                expect(response).toBeDefined();
+                const body = response.body as ResponseObject<RunResult>;
+                expect(body).toBeDefined();
+                const length = body.data.length;
+                expect(length).toBe(1);
+            });
+    })
+
+    it("should return Previous activities items", async () => {
+        newLimit = 3
+        await requestWithSuperTest
+            .get(`/activity/previous/${newLimit}`)
             .expect(200)
             .expect('Content-Type', /json/)
             .then((response: Response) => {
