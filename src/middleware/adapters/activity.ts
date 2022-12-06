@@ -68,12 +68,12 @@ export const getPreviousActivitiesAdapter = async (req: Request): Promise<Respon
         const stmt: Statement = serviceDB.prepare(  `SELECT activity.*
                                                             FROM activity
                                                             JOIN history ON activity.id = history.activityId
-                                                            ORDER BY id DESC LIMIT 3`);
+                                                            ORDER BY id DESC LIMIT ?`);
         if (!stmt) {
             reject(emptyStatementResponse)
         }
 
-        const results: ActivityItem[] = stmt.all() as ActivityItem[];
+        const results: ActivityItem[] = stmt.all(req.params.limit) as ActivityItem[];
         if (results) {
             resolve(responseObjectItem<ActivityItem[]>(req, results));
         } else {
