@@ -13,6 +13,6 @@ export const activities = Router();
 activities
     .get("/", getAllActivitiesController)
     .post("/add", addActivityController)
-    .get("/previous/:limit",getPreviousActivitiesController)
     .get("/latest", getLatestActivityController)
     .get("/:category", getCategoryActivityController)
+    .get("/previous/:limit",getPreviousActivitiesController)

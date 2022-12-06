@@ -4,7 +4,7 @@ import {responseError} from "../../helpers";
 import {RunResult} from "better-sqlite3";
 import {
     addActivityAdapter,
-    getAllActivitiesAdapter, getCategoryActivityAdapter, getLatestActivityAdapter,
+    getAllActivitiesAdapter, getCategoryActivityAdapter, getLatestActivityAdapter, getPreviousActivitiesAdapter,
 } from "../adapters/activity";
 
 export const getAllActivitiesController = (req: Request, res: Response<ResponseObject<ActivityItem[]>>) => {
@@ -26,6 +26,12 @@ export const getLatestActivityController = (req: Request, res: Response<Response
 
 export const getCategoryActivityController = (req: Request, res: Response<ResponseObject<ActivityItem[]>>) => {
     getCategoryActivityAdapter(req)
+        .then((response: ResponseObject<ActivityItem[]>) => res.status(200).json(response))
+        .catch((err: Error) => res.status(500).json(responseError(req, err.message)))
+}
+
+export const getPreviousActivitiesController = (req: Request, res: Response<ResponseObject<ActivityItem[]>>) => {
+    getPreviousActivitiesAdapter(req)
         .then((response: ResponseObject<ActivityItem[]>) => res.status(200).json(response))
         .catch((err: Error) => res.status(500).json(responseError(req, err.message)))
 }
