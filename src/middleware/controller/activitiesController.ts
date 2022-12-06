@@ -5,7 +5,6 @@ import {RunResult} from "better-sqlite3";
 import {
     addActivityAdapter,
     getAllActivitiesAdapter,
-
     getPreviousActivitiesAdapter
 } from "../adapters/activity";
 
