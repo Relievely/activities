@@ -3,7 +3,7 @@ import {ActivityItem, ResponseObject} from "../../interfaces";
 import {RunResult, Statement} from "better-sqlite3";
 import {
     emptyResultResponse,
-    emptyStatementResponse,
+    emptyStatementResponse, insufficientParametersError, parametersIncluded,
     responseObjectItem,
     responseObjectItems,
     serviceDB
@@ -76,6 +76,26 @@ export const getPreviousActivitiesAdapter = async (req: Request): Promise<Respon
         const results: ActivityItem[] = stmt.all(req.params.limit) as ActivityItem[];
         if (results) {
             resolve(responseObjectItem<ActivityItem[]>(req, results));
+        } else {
+            reject(emptyResultResponse)
+        }
+    });
+}
+
+export const getCategoryActivityAdapter = async (req: Request): Promise<ResponseObject<ActivityItem[]>> => {
+    return new Promise<ResponseObject<ActivityItem[]>>((resolve, reject) => {
+
+        const stmt = serviceDB.prepare<string>(`SELECT * FROM activity WHERE category = ?`);
+
+        if (!stmt) {
+            reject(emptyStatementResponse);
+        }
+        if (!parametersIncluded<string>(req, "category")) {
+            reject(insufficientParametersError)
+        }
+        const result: ActivityItem[] = stmt.all(req.params.category) as ActivityItem[];
+        if (result) {
+            resolve(responseObjectItem<ActivityItem[]>(req, result))
         } else {
             reject(emptyResultResponse)
         }
