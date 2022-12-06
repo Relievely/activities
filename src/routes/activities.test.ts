@@ -1,11 +1,12 @@
-import {describe, it, expect, beforeAll} from '@jest/globals';
-import {RunResult} from 'better-sqlite3';
-import supertest, {Response} from 'supertest';
-import {app} from '../app';
-import {ResponseObject} from '../interfaces';
+import {describe, expect, it, beforeAll} from "@jest/globals";
+import supertest, {Response} from "supertest";
+import {app} from "../app";
+import {ResponseObject} from "../interfaces";
 import {databaseInit} from "./jestPresets";
+import {RunResult} from "better-sqlite3";
 
 const requestWithSuperTest = supertest(app);
+
 beforeAll(async () => {
     await databaseInit();
     await requestWithSuperTest
@@ -19,32 +20,36 @@ beforeAll(async () => {
             expect(body).toBeDefined();
         });
 });
-
-describe("should handle items", () => {
-    let newID: number | bigint = 0;
-
-    it("should create new note item", async () => {
+describe("Activities routes", () => {
+    let newLimit: number | bigint = 0
+    it("should return latest activity item that was logged", async () => {
+        newLimit = 1
         await requestWithSuperTest
-            .post("/rating")
-            .send({historyId: 1, state: 1})
+            .get(`/activity/previous/${newLimit}`)
             .expect(200)
             .expect('Content-Type', /json/)
             .then((response: Response) => {
-                expect((response.body as ResponseObject<RunResult>).data.value.changes).toBe(1);
-                newID = (response.body as ResponseObject<RunResult>).data.value.lastInsertRowid;
-            })
+                expect(response).toBeDefined();
+                const body = response.body as ResponseObject<RunResult>;
+                expect(body).toBeDefined();
+                const length = body.data.length;
+                expect(length).toBe(1);
+            });
     })
 
-    it("should return all rating items", async () => {
+    it("should return Previous activities items", async () => {
+        newLimit = 3
         await requestWithSuperTest
-            .get("/rating")
+            .get(`/activity/previous/${newLimit}`)
             .expect(200)
             .expect('Content-Type', /json/)
             .then((response: Response) => {
                 expect(response).toBeDefined();
                 const body = response.body as ResponseObject<RunResult[]>;
                 expect(body).toBeDefined();
-                expect(body.data.length).toBeGreaterThanOrEqual(0);
+                const length = body.data.length;
+                expect(length).toBeGreaterThanOrEqual(0);
+                expect(length).toBeLessThanOrEqual(3);
             });
     });
 });

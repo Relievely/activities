@@ -3,7 +3,7 @@ import {ActivityItem, ResponseObject} from "../../interfaces";
 import {RunResult, Statement} from "better-sqlite3";
 import {
     emptyResultResponse,
-    emptyStatementResponse, insufficientParametersError, parametersIncluded,
+    emptyStatementResponse,
     responseObjectItem,
     responseObjectItems,
     serviceDB
@@ -46,8 +46,9 @@ export const getLatestActivityAdapter = async (req: Request): Promise<ResponseOb
     return new Promise<ResponseObject<ActivityItem>>((resolve, reject) => {
 
         const stmt: Statement = serviceDB.prepare(`SELECT activity.*
-                                                   FROM activity
-                                                            JOIN history ON activity.id = history.activityId`);
+                                                          FROM activity
+                                                          JOIN history ON activity.id = history.activityId
+                                                          ORDER BY id DESC LIMIT 1`);
 
         if (!stmt) {
             reject(emptyStatementResponse)
@@ -56,6 +57,25 @@ export const getLatestActivityAdapter = async (req: Request): Promise<ResponseOb
         const result: ActivityItem = stmt.get() as ActivityItem;
         if (result) {
             resolve(responseObjectItem<ActivityItem>(req, result));
+        } else {
+            reject(emptyResultResponse)
+        }
+    });
+}
+
+export const getPreviousActivitiesAdapter = async (req: Request): Promise<ResponseObject<ActivityItem[]>> => {
+    return new Promise<ResponseObject<ActivityItem[]>>((resolve, reject) => {
+        const stmt: Statement = serviceDB.prepare(  `SELECT activity.*
+                                                            FROM activity
+                                                            JOIN history ON activity.id = history.activityId
+                                                            ORDER BY id DESC LIMIT ?`);
+        if (!stmt) {
+            reject(emptyStatementResponse)
+        }
+
+        const results: ActivityItem[] = stmt.all(req.params.limit) as ActivityItem[];
+        if (results) {
+            resolve(responseObjectItem<ActivityItem[]>(req, results));
         } else {
             reject(emptyResultResponse)
         }
