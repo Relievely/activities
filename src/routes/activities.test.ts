@@ -21,9 +21,11 @@ beforeAll(async () => {
         });
 });
 describe("Activities routes", () => {
+    let newLimit: number | bigint = 0
     it("should return latest activity item that was logged", async () => {
+        newLimit = 1
         await requestWithSuperTest
-            .get("/activity/latest")
+            .get(`/activity/previous/${newLimit}`)
             .expect(200)
             .expect('Content-Type', /json/)
             .then((response: Response) => {
@@ -36,8 +38,9 @@ describe("Activities routes", () => {
     })
 
     it("should return Previous activities items", async () => {
+        newLimit = 3
         await requestWithSuperTest
-            .get("/activity/previous")
+            .get(`/activity/previous/${newLimit}`)
             .expect(200)
             .expect('Content-Type', /json/)
             .then((response: Response) => {
