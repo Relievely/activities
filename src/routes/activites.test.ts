@@ -58,8 +58,7 @@ describe("Activities routes", () => {
             .then(async (response: Response) => {
                 expect(response).toBeDefined();
                 await requestWithSuperTest
-                    .get("/activity/:category")
-                    .send({category: "Guided"})
+                    .get("/activity/Guided")
                     .expect(200)
                     .expect('Content-Type', /json/)
                     .then((response: Response) => {
