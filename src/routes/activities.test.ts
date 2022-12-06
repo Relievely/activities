@@ -21,23 +21,9 @@ beforeAll(async () => {
         });
 });
 describe("Activities routes", () => {
-    it("should return latest activity item that was logged", async () => {
-        await requestWithSuperTest
-            .get("/activity/latest")
-            .expect(200)
-            .expect('Content-Type', /json/)
-            .then((response: Response) => {
-                expect(response).toBeDefined();
-                const body = response.body as ResponseObject<RunResult>;
-                expect(body).toBeDefined();
-                const length = body.data.length;
-                expect(length).toBe(1);
-            });
-    })
-
     it("should return Previous activities items", async () => {
         await requestWithSuperTest
-            .get("/activity/previous")
+            .get("/activity/previous/2")
             .expect(200)
             .expect('Content-Type', /json/)
             .then((response: Response) => {

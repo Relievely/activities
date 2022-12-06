@@ -42,38 +42,18 @@ export const addActivityAdapter = async (req: Request): Promise<ResponseObject<R
         }
     });
 }
-export const getLatestActivityAdapter = async (req: Request): Promise<ResponseObject<ActivityItem>> => {
-    return new Promise<ResponseObject<ActivityItem>>((resolve, reject) => {
-
-        const stmt: Statement = serviceDB.prepare(`SELECT activity.*
-                                                          FROM activity
-                                                          JOIN history ON activity.id = history.activityId
-                                                          ORDER BY id DESC LIMIT 1`);
-
-        if (!stmt) {
-            reject(emptyStatementResponse)
-        }
-
-        const result: ActivityItem = stmt.get() as ActivityItem;
-        if (result) {
-            resolve(responseObjectItem<ActivityItem>(req, result));
-        } else {
-            reject(emptyResultResponse)
-        }
-    });
-}
 
 export const getPreviousActivitiesAdapter = async (req: Request): Promise<ResponseObject<ActivityItem[]>> => {
     return new Promise<ResponseObject<ActivityItem[]>>((resolve, reject) => {
         const stmt: Statement = serviceDB.prepare(  `SELECT activity.*
                                                             FROM activity
                                                             JOIN history ON activity.id = history.activityId
-                                                            ORDER BY id DESC LIMIT 3`);
+                                                            ORDER BY id DESC LIMIT ?`);
         if (!stmt) {
             reject(emptyStatementResponse)
         }
 
-        const results: ActivityItem[] = stmt.all() as ActivityItem[];
+        const results: ActivityItem[] = stmt.all(req.params.limit) as ActivityItem[];
         if (results) {
             resolve(responseObjectItem<ActivityItem[]>(req, results));
         } else {
