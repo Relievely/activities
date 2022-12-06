@@ -4,8 +4,7 @@ import {responseError} from "../../helpers";
 import {RunResult} from "better-sqlite3";
 import {
     addActivityAdapter,
-    getAllActivitiesAdapter,
-    getPreviousActivitiesAdapter
+    getAllActivitiesAdapter, getCategoryActivityAdapter, getLatestActivityAdapter,
 } from "../adapters/activity";
 
 export const getAllActivitiesController = (req: Request, res: Response<ResponseObject<ActivityItem[]>>) => {

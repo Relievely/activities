@@ -3,7 +3,7 @@ import {ActivityItem, ResponseObject} from "../../interfaces";
 import {RunResult, Statement} from "better-sqlite3";
 import {
     emptyResultResponse,
-    emptyStatementResponse,
+    emptyStatementResponse, insufficientParametersError, parametersIncluded,
     responseObjectItem,
     responseObjectItems,
     serviceDB
