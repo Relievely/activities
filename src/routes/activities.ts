@@ -1,8 +1,7 @@
 import {Router} from "express";
 import {
     addActivityController,
-    getAllActivitiesController,
-    getLatestActivityController, getPreviousActivitiesController
+    getAllActivitiesController, getPreviousActivitiesController
 } from "../middleware/controller/activitiesController";
 
 
@@ -11,5 +10,4 @@ export const activities = Router();
 activities
     .get("/", getAllActivitiesController)
     .post("/add", addActivityController)
-    .get("/latest", getLatestActivityController)
-    .get("/previous",getPreviousActivitiesController)
+    .get("/previous/:limit",getPreviousActivitiesController)
