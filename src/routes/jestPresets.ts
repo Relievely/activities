@@ -9,7 +9,7 @@ export const databaseInit = async () => {
     const requestWithSuperTest = supertest(app);
 
     await requestWithSuperTest
-        .get("/create")
+        .put("/create")
         .expect(200)
         .expect('Content-Type', /json/)
         .then(async (response: Response) => {
@@ -19,7 +19,7 @@ export const databaseInit = async () => {
             expect(length).toBeLessThanOrEqual(4);
 
             await requestWithSuperTest
-                .get("/fill")
+                .put("/fill")
                 .expect(200)
                 .expect('Content-Type', /json/)
                 .then((fillResponse: Response) => {

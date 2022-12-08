@@ -10,7 +10,7 @@ describe("Creation routes", () => {
 
     it("should create tables with data", async () => {
         await requestWithSuperTest
-            .get("/create")
+            .put("/create")
             .expect(200)
             .expect('Content-Type', /json/)
             .then(async (response: Response) => {
@@ -20,7 +20,7 @@ describe("Creation routes", () => {
                 expect(length).toBeLessThanOrEqual(4);
 
                 await requestWithSuperTest
-                    .get("/fill")
+                    .put("/fill")
                     .expect(200)
                     .expect('Content-Type', /json/)
                     .then((fillResponse: Response) => {

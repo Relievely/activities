@@ -1,18 +1,47 @@
 openapi: 3.0.3
 info:
-  title: Relievely
+  title: Relievely Activities
   description: |-
-    This is placeholder text
+    This services handles a catalog of activities, tracks which have been done and also their ratings
 
   contact:
     email: contact@example.org
-  version: 0.1-a
+  version: '1.0'
 
 tags:
   - name: activity
     description: Get information about available activities and interact with them
 paths:
-  /activity/{activityId}:
+  /create:
+    put:
+      tags:
+        - creation
+      summary: Create all tables for the database
+      description: Create all tables for the database
+      operationId: createTables
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseObjectRunResultArray'
+  /fill:
+    put:
+      tags:
+        - creation
+      summary: Fill all tables for the database with their default data
+      description: Fill all tables for the database with their default data
+      operationId: fillTables
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseObjectRunResultArray'
+
+  /activity/{activity}:
     get:
       tags:
         - activity
@@ -20,7 +49,7 @@ paths:
       description: Get an activity by Id
       operationId: getActivityById
       parameters:
-        - name: activityId
+        - name: activity
           in: path
           description: ID of activity to return
           required: true
@@ -34,7 +63,96 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Activity'
-
+  /activity/add:
+    post:
+      tags:
+        - activity
+      summary: Get an existing activity
+      description: Create a new activity
+      operationId: addActivity
+      parameters:
+        - name: activityObject
+          in: query
+          description: object with alll data that we need
+          required: true
+          schema:
+            type: object
+      responses:
+        '200':
+          description: successful operation
+  /activity/latest:
+    get:
+      tags:
+        - activity
+      summary: Get the last used activity
+      description: Get the last used activity
+      operationId: latestActivity
+      responses:
+        '200':
+          description: successful operation
+  /activity/previous/{limit}:
+    get:
+      tags:
+        - activity
+      summary: Get the last used activity
+      description: Get the last used activity
+      operationId: previousActivities
+      parameters:
+        - name: limit
+          in: path
+          description: number of previous entries to be retrieved
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+  /activity/{category}:
+    get:
+      tags:
+        - activity
+      summary: Get an existing activity
+      description: Get an activity by Id
+      operationId: getActivityByCategory
+      parameters:
+        - name: category
+          in: path
+          description: string of activity category to be filtered for
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+  /history:
+    put:
+      tags:
+        - history
+      summary: Create a new history entry
+      responses:
+        '200':
+          description: successful operation
+    delete:
+      tags:
+        - history
+      summary: Delete a given history entry
+      responses:
+        '200':
+          description: successful operation
+  /rating:
+    get:
+      tags:
+        - rating
+      responses:
+        '200':
+          description: successful operation
+    post:
+      tags:
+        - rating
+      responses:
+        '200':
+          description: successful operation
 components:
   schemas:
     Activity:
@@ -49,3 +167,64 @@ components:
         name:
           type: string
           example: Sleep
+    ResponseObject:
+      type: object
+      properties:
+        url:
+          type: string
+        routes:
+          type: string
+        query:
+          type: object
+        params:
+          type: object
+        body:
+          type: object
+        accepted:
+          type: array
+          items: {
+            "$ref": "#/components/schemas/MediaType"
+          }
+        status:
+          type: string
+        data:
+          type: object
+        error:
+          type: string
+    ResponseObjectRunResult:
+      allOf:
+        - $ref: '#/components/schemas/ResponseObject'
+        - type: object
+          properties:
+            data:
+              allOf:
+                - $ref: '#/components/schemas/RunResult'
+    ResponseObjectRunResultArray:
+      allOf:
+        - $ref: '#/components/schemas/ResponseObject'
+        - type: object
+          properties:
+            data:
+              type: array
+              items: {
+                "$ref": '#/components/schemas/RunResult'
+              }
+
+    RunResult:
+      type: object
+      properties:
+        changes:
+          type: number
+        lastInsertRowid:
+          type: number
+    MediaType:
+      type: object
+      properties:
+        value:
+          type: string
+        quality:
+          type: number
+        type:
+          type: string
+        subtype:
+          type: string
