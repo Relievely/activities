@@ -24,6 +24,27 @@ export const getAllActivitiesAdapter = async (req: Request): Promise<ResponseObj
         }
     });
 }
+
+export const getActivityItemAdapter = async (req: Request): Promise<ResponseObject<ActivityItem>> => {
+    return new Promise<ResponseObject<ActivityItem>>((resolve, reject) => {
+
+        const stmt: Statement = serviceDB.prepare(`   SELECT *
+                                                            FROM activity
+                                                            WHERE id = ?`);
+
+        if (!stmt) {
+            reject(emptyStatementResponse)
+        }
+
+        const result: ActivityItem = stmt.get(req.params.id) as ActivityItem;
+        if (result) {
+            resolve(responseObjectItem<ActivityItem>(req, result));
+        } else {
+            reject(emptyResultResponse)
+        }
+    });
+}
+
 export const addActivityAdapter = async (req: Request): Promise<ResponseObject<RunResult>> => {
     return new Promise<ResponseObject<RunResult>>((resolve, reject) => {
         const item: ActivityItem = req.body as ActivityItem;
@@ -42,26 +63,7 @@ export const addActivityAdapter = async (req: Request): Promise<ResponseObject<R
         }
     });
 }
-export const getLatestActivityAdapter = async (req: Request): Promise<ResponseObject<ActivityItem>> => {
-    return new Promise<ResponseObject<ActivityItem>>((resolve, reject) => {
 
-        const stmt: Statement = serviceDB.prepare(`SELECT activity.*
-                                                          FROM activity
-                                                          JOIN history ON activity.id = history.activityId
-                                                          ORDER BY id DESC LIMIT 1`);
-
-        if (!stmt) {
-            reject(emptyStatementResponse)
-        }
-
-        const result: ActivityItem = stmt.get() as ActivityItem;
-        if (result) {
-            resolve(responseObjectItem<ActivityItem>(req, result));
-        } else {
-            reject(emptyResultResponse)
-        }
-    });
-}
 
 export const getPreviousActivitiesAdapter = async (req: Request): Promise<ResponseObject<ActivityItem[]>> => {
     return new Promise<ResponseObject<ActivityItem[]>>((resolve, reject) => {

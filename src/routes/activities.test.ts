@@ -1,7 +1,7 @@
 import {describe, expect, it, beforeAll} from "@jest/globals";
 import supertest, {Response} from "supertest";
 import {app} from "../app";
-import {ResponseObject} from "../interfaces";
+import {ActivityItem, ResponseObject} from "../interfaces";
 import {databaseInit} from "./jestPresets";
 import {RunResult} from "better-sqlite3";
 
@@ -50,6 +50,22 @@ describe("Activities routes", () => {
                 const length = body.data.length;
                 expect(length).toBeGreaterThanOrEqual(0);
                 expect(length).toBeLessThanOrEqual(3);
+            });
+    });
+
+    const newID: number | bigint = 1;
+
+    it("should return activity item with id", async () => {
+        expect(newID).toBeGreaterThan(0);
+        await requestWithSuperTest
+            .get(`/activity/${newID}`)
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then((response: Response) => {
+                expect(response).toBeDefined();
+                expect((response.body as ResponseObject<ActivityItem>).data).toBeDefined();
+                expect((response.body as ResponseObject<ActivityItem>).data.value).toBeDefined();
+                expect((response.body as ResponseObject<ActivityItem>).data.value.id).toBe(newID);
             });
     });
 });
