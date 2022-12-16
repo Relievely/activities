@@ -27,7 +27,9 @@ export const createTablesAdapter = async (req: Request): Promise<ResponseObject<
                                                 (
                                                     id   INTEGER UNIQUE NOT NULL PRIMARY KEY AUTOINCREMENT,
                                                     name TEXT    NOT NULL,
-                                                    activityId INTEGER NOT NULL
+                                                    triggerTime INTEGER,
+                                                    activityId INTEGER,
+                                                    FOREIGN KEY (activityId) REFERENCES activity(id)
                                                 );`);
 
 
