@@ -14,9 +14,9 @@ export const createHistoryItemAdapter = async (req: Request): Promise<ResponseOb
 
         const item: HistoryItem = req.body as HistoryItem;
 
-        const activityId: number = Number(item.activityId);
-        const timeStart: number = Number(item.timeStart);
-        const timeEnd: number = Number(item.timeEnd);
+        const activityId: number = item.activityId;
+        const timeStart: number = item.timeStart;
+        const timeEnd: number = item.timeEnd;
 
         const stmt: Statement<[number, number, number]> = serviceDB.prepare(`INSERT INTO history (activityId, timeStart, timeEnd) VALUES (?, ?, ?)`);
 

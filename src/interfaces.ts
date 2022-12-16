@@ -38,3 +38,10 @@ export interface HistoryItem {
     timeStart: number,
     timeEnd: number
 }
+
+export interface ReminderItem {
+    id?: number,
+    name : string,
+    triggerTime: number,
+    activityID: number
+}

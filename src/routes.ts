@@ -8,6 +8,7 @@ import pino_http from "pino-http";
 import bodyParser from "body-parser";
 import multer, {Multer} from "multer";
 import {history} from "./routes/history";
+import {reminder} from "./routes/reminder";
 
 const form: Multer = multer();
 
@@ -27,4 +28,5 @@ export const routes = (app: Express) => {
     app.use("/activity", activities);
     app.use("/rating", rating);
     app.use("/history", history);
+    app.use("/reminder",reminder);
 }
