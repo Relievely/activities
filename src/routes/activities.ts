@@ -15,4 +15,4 @@ activities
     .post("/add", addActivityController)
     .get("/:id", getActivityItemController)
     .get("/category/:category", getCategoryActivityController)
-    .get("/previous/:limit",getPreviousActivitiesController)
+    .get("/previous/:limit", getPreviousActivitiesController)

@@ -11,8 +11,8 @@ import {
 export const reminder = Router();
 
 reminder
-    .get("/",getAllReminderController)
-    .get("/:id",getReminderItemController)
-    .post("/",insertReminderItemController)
+    .get("/", getAllReminderController)
+    .get("/:id", getReminderItemController)
+    .post("/", insertReminderItemController)
     .patch("/time", updateReminderItemTimeController)
-    .patch("/name",updateReminderItemNameController)
+    .patch("/name", updateReminderItemNameController)

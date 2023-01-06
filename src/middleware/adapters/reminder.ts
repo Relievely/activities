@@ -11,7 +11,8 @@ import {
 
 export const getAllReminderAdapter = async (req: Request): Promise<ResponseObject<ReminderItem[]>> => {
     return new Promise<ResponseObject<ReminderItem[]>>((resolve, reject) => {
-        const stmt: Statement = serviceDB.prepare(`SELECT * FROM reminder`);
+        const stmt: Statement = serviceDB.prepare(`SELECT *
+                                                   FROM reminder`);
 
 
         const results: ReminderItem[] = stmt.all() as ReminderItem[];
@@ -31,8 +32,8 @@ export const getReminderItemAdapter = async (req: Request): Promise<ResponseObje
     return new Promise<ResponseObject<ReminderItem>>((resolve, reject) => {
 
         const stmt: Statement = serviceDB.prepare(`   SELECT *
-                                                            FROM reminder
-                                                            WHERE id = ?`);
+                                                      FROM reminder
+                                                      WHERE id = ?`);
 
         if (!stmt) {
             reject(emptyStatementResponse)
@@ -55,7 +56,8 @@ export const insertReminderItemAdapter = async (req: Request): Promise<ResponseO
         const name: string = item.name;
         const triggerTime: number = item.triggerTime;
         const activityID: number = item.activityID;
-        const stmt: Statement<[string, number, number]> = serviceDB.prepare(`INSERT INTO reminder (name, triggerTime, activityID) VALUES (?, ?,?)`);
+        const stmt: Statement<[string, number, number]> = serviceDB.prepare(`INSERT INTO reminder (name, triggerTime, activityID)
+                                                                             VALUES (?, ?, ?)`);
 
         if (!stmt) {
             reject(emptyStatementResponse);
@@ -72,7 +74,9 @@ export const insertReminderItemAdapter = async (req: Request): Promise<ResponseO
 
 export const updateReminderItemTriggerAdapter = async (req: Request): Promise<ResponseObject<RunResult>> => {
     return new Promise<ResponseObject<RunResult>>((resolve, reject) => {
-        const stmt = serviceDB.prepare<[number, number]>(`UPDATE reminder SET triggerTime = ? WHERE id = ?`);
+        const stmt = serviceDB.prepare<[number, number]>(`UPDATE reminder
+                                                          SET triggerTime = ?
+                                                          WHERE id = ?`);
         if (!stmt) {
             reject(emptyStatementResponse);
         }
@@ -96,7 +100,9 @@ export const updateReminderItemTriggerAdapter = async (req: Request): Promise<Re
 
 export const updateReminderItemNameAdapter = async (req: Request): Promise<ResponseObject<RunResult>> => {
     return new Promise<ResponseObject<RunResult>>((resolve, reject) => {
-        const stmt = serviceDB.prepare<[string, number]>(`UPDATE reminder SET name = ? WHERE id = ?`);
+        const stmt = serviceDB.prepare<[string, number]>(`UPDATE reminder
+                                                          SET name = ?
+                                                          WHERE id = ?`);
 
 
         const item: ReminderItem = req.body as ReminderItem;

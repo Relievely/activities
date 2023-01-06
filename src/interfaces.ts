@@ -41,7 +41,7 @@ export interface HistoryItem {
 
 export interface ReminderItem {
     id?: number,
-    name : string,
+    name: string,
     triggerTime: number,
     activityID: number
 }

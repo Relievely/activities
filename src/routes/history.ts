@@ -5,4 +5,4 @@ export const history = Router();
 
 history
     .put("/", insertHistoryItemController)
-    .delete("/",deleteHistoryItemController)
+    .delete("/", deleteHistoryItemController)

@@ -28,5 +28,5 @@ export const routes = (app: Express) => {
     app.use("/activity", activities);
     app.use("/rating", rating);
     app.use("/history", history);
-    app.use("/reminder",reminder);
+    app.use("/reminder", reminder);
 }

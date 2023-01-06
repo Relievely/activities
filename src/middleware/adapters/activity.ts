@@ -69,7 +69,7 @@ export const addActivityAdapter = async (req: Request): Promise<ResponseObject<R
 
 export const getPreviousActivitiesAdapter = async (req: Request): Promise<ResponseObject<ActivityItem[]>> => {
     return new Promise<ResponseObject<ActivityItem[]>>((resolve, reject) => {
-        const stmt: Statement = serviceDB.prepare(  `SELECT activity.*
+        const stmt: Statement = serviceDB.prepare(`SELECT activity.*
                                                             FROM activity
                                                             JOIN history ON activity.id = history.activityId
                                                             ORDER BY id DESC LIMIT ?`);
