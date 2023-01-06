@@ -5,13 +5,13 @@ import {RunResult} from "better-sqlite3";
 import {createRatingItemAdapter, getAllRatingsAdapter} from "../adapters/rating";
 
 export const getAllRatingsController = (req: Request, res: Response<ResponseObject<RatingItem[]>>) => {
-    getAllRatingsAdapter(req)
-        .then((response: ResponseObject<RatingItem[]>) => res.status(200).json(response))
-        .catch((err: Error) => res.status(500).json(responseError(req, err.message)))
+ getAllRatingsAdapter(req)
+  .then((response: ResponseObject<RatingItem[]>) => res.status(200).json(response))
+  .catch((err: Error) => res.status(500).json(responseError(req, err.message)))
 }
 
 export const insertRatingItemController = (req: Request, res: Response<ResponseObject<RunResult>>): void => {
-    createRatingItemAdapter(req)
-        .then((response: ResponseObject<RunResult>) => res.status(200).json(response))
-        .catch((err: Error) => res.status(500).json(responseError(req, err.message)))
+ createRatingItemAdapter(req)
+  .then((response: ResponseObject<RunResult>) => res.status(200).json(response))
+  .catch((err: Error) => res.status(500).json(responseError(req, err.message)))
 }

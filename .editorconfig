@@ -2,18 +2,12 @@ root = true
 
 [*]
 charset = utf-8
-end_of_line = crlf
-indent_size = 4
+end_of_line = lf
 indent_style = space
 insert_final_newline = false
-max_line_length = 120
+trim_trailing_whitespace = true
+max_line_length = 160
 tab_width = 4
-
-[*.sass]
-indent_size = 2
-
-[*.scss]
-indent_size = 2
 
 [{*.har,*.jsb2,*.jsb3,*.json,.babelrc,.eslintrc,.prettierrc,.stylelintrc,bowerrc,jest.config}]
 indent_size = 2

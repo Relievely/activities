@@ -1,8 +1,7 @@
 import {app} from './app';
+import pino from "pino";
 
 const port = process.env.PORT;
-
-import pino from "pino";
 
 const logger = pino();
 

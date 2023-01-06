@@ -4,5 +4,5 @@ import {getAllRatingsController, insertRatingItemController} from "../middleware
 export const rating = Router();
 
 rating
-    .get("/", getAllRatingsController)
-    .post("/", insertRatingItemController)
+ .get("/", getAllRatingsController)
+ .post("/", insertRatingItemController)
