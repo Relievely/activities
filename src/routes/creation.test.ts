@@ -1,7 +1,7 @@
 import supertest, {Response} from "supertest";
 import {app} from '../app';
 
-import {describe, it, expect} from '@jest/globals';
+import {describe, expect, it} from '@jest/globals';
 import {ResponseObject} from "../interfaces";
 import {RunResult} from "better-sqlite3";
 

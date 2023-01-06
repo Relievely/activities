@@ -1,9 +1,10 @@
 import {Router} from "express";
 import {
     addActivityController,
+    getActivityItemController,
     getAllActivitiesController,
-    getPreviousActivitiesController,
-    getCategoryActivityController, getActivityItemController
+    getCategoryActivityController,
+    getPreviousActivitiesController
 } from "../middleware/controller/activitiesController";
 
 

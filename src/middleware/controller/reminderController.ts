@@ -1,13 +1,14 @@
 import {Request, Response} from "express";
-import {ActivityItem, ReminderItem, ResponseObject} from "../../interfaces";
+import {ReminderItem, ResponseObject} from "../../interfaces";
 import {RunResult} from "better-sqlite3";
 import {responseError} from "../../helpers";
 import {
-    getAllReminderAdapter, getReminderItemAdapter,
-    insertReminderItemAdapter, updateReminderItemNameAdapter,
+    getAllReminderAdapter,
+    getReminderItemAdapter,
+    insertReminderItemAdapter,
+    updateReminderItemNameAdapter,
     updateReminderItemTriggerAdapter
 } from "../adapters/reminder";
-import {getActivityItemAdapter, getAllActivitiesAdapter} from "../adapters/activity";
 
 export const insertReminderItemController = (req: Request, res: Response<ResponseObject<RunResult>>): void => {
     insertReminderItemAdapter(req)

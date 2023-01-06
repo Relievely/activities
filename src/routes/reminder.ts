@@ -1,7 +1,9 @@
 import {Router} from "express";
 import {
-    getAllReminderController, getReminderItemController,
-    insertReminderItemController, updateReminderItemNameController,
+    getAllReminderController,
+    getReminderItemController,
+    insertReminderItemController,
+    updateReminderItemNameController,
     updateReminderItemTimeController
 } from "../middleware/controller/reminderController";
 

@@ -1,4 +1,4 @@
-import {describe, expect, it, beforeAll} from "@jest/globals";
+import {beforeAll, describe, expect, it} from "@jest/globals";
 import supertest, {Response} from "supertest";
 import {app} from "../app";
 import {ActivityItem, ResponseObject} from "../interfaces";

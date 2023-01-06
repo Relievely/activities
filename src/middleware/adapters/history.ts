@@ -3,7 +3,8 @@ import {HistoryItem, ResponseObject} from "../../interfaces";
 import {RunResult, Statement} from "better-sqlite3";
 import {
     emptyResultResponse,
-    emptyStatementResponse, insufficientParametersError,
+    emptyStatementResponse,
+    insufficientParametersError,
     parametersIncluded,
     responseObjectItem,
     serviceDB

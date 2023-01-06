@@ -1,15 +1,9 @@
 import {Request} from "express";
 
-import {ActivityItem, RatingItem, ResponseObject} from "../../interfaces";
+import {ResponseObject} from "../../interfaces";
 
-import Database, {Database as DatabaseType, RunResult, Statement} from "better-sqlite3";
-import {
-    emptyResultResponse,
-    emptyStatementResponse,
-    responseObjectItem,
-    responseObjectItems,
-    serviceDB
-} from "../../helpers";
+import {RunResult, Statement} from "better-sqlite3";
+import {emptyResultResponse, responseObjectItems, serviceDB} from "../../helpers";
 
 export const createTablesAdapter = async (req: Request): Promise<ResponseObject<RunResult[]>> => {
     return new Promise<ResponseObject<RunResult[]>>((resolve, reject) => {

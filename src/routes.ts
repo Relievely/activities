@@ -2,7 +2,7 @@ import cors from "cors";
 import {Express} from "express";
 import {creation} from "./routes/creation";
 import {activities} from "./routes/activities";
-import { rating } from "./routes/rating";
+import {rating} from "./routes/rating";
 
 import pino_http from "pino-http";
 import bodyParser from "body-parser";

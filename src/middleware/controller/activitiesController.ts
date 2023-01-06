@@ -3,8 +3,10 @@ import {ActivityItem, ResponseObject} from "../../interfaces";
 import {responseError} from "../../helpers";
 import {RunResult} from "better-sqlite3";
 import {
-    addActivityAdapter, getActivityItemAdapter,
-    getAllActivitiesAdapter, getCategoryActivityAdapter,
+    addActivityAdapter,
+    getActivityItemAdapter,
+    getAllActivitiesAdapter,
+    getCategoryActivityAdapter,
     getPreviousActivitiesAdapter
 } from "../adapters/activity";
 

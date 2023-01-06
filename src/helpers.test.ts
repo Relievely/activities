@@ -1,7 +1,7 @@
 import {parametersIncluded, serviceDB} from "./helpers";
 import {Request} from "express";
 
-import {test, expect} from '@jest/globals';
+import {expect, test} from '@jest/globals';
 import {ParamsDictionary} from "express-serve-static-core";
 
 test("Instantiate userDB", () => {

@@ -1,4 +1,4 @@
-import { Router } from "express";
+import {Router} from "express";
 import {deleteHistoryItemController, insertHistoryItemController} from "../middleware/controller/historyController";
 
 export const history = Router();

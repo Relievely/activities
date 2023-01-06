@@ -2,7 +2,7 @@ import supertest, {Response} from "supertest";
 import {app} from "../app";
 import {beforeAll, describe, expect, it} from "@jest/globals";
 import {databaseInit} from "./jestPresets";
-import {ActivityItem, RatingItem, ReminderItem, ResponseObject} from "../interfaces";
+import {ActivityItem, ReminderItem, ResponseObject} from "../interfaces";
 import {RunResult} from "better-sqlite3";
 
 

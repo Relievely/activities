@@ -1,4 +1,4 @@
-import {describe, it, expect, beforeAll} from '@jest/globals';
+import {beforeAll, describe, expect, it} from '@jest/globals';
 import {RunResult} from 'better-sqlite3';
 import supertest, {Response} from 'supertest';
 import {app} from '../app';
