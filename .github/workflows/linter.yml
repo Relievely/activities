@@ -54,8 +54,7 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           FILTER_REGEX_INCLUDE: .*src/.*
           FILTER_REGEX_EXCLUDE: .*src/.*test.ts
-          VALIDATE_TYPESCRIPT_ES: false
-          VALIDATE_TSX: false
+          VALIDATE_TYPESCRIPT_STANDARD: false
           VALIDATE_JSCPD: false
           # Change to 'master' if your main branch differs
           DEFAULT_BRANCH: main
