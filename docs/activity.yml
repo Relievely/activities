@@ -73,7 +73,7 @@ paths:
       parameters:
         - name: activityObject
           in: query
-          description: object with alll data that we need
+          description: object with all data that we need
           required: true
           schema:
             type: object
