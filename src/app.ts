@@ -9,13 +9,13 @@ export const app: Express = express();
 const logger = pino();
 
 if (fs.existsSync('.env')) {
-    const config = dotenv.config({path: '.env'});
+ const config = dotenv.config({path: '.env'});
 
-    if (config.error) {
-        throw config.error;
-    }
+ if (config.error) {
+  throw config.error;
+ }
 } else {
-    logger.warn("No environment file provided");
+ logger.warn("No environment file provided");
 }
 
 

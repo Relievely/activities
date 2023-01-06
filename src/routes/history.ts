@@ -4,5 +4,5 @@ import {deleteHistoryItemController, insertHistoryItemController} from "../middl
 export const history = Router();
 
 history
-    .put("/", insertHistoryItemController)
-    .delete("/", deleteHistoryItemController)
+ .put("/", insertHistoryItemController)
+ .delete("/", deleteHistoryItemController)

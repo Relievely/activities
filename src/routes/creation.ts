@@ -4,5 +4,5 @@ import {createTablesController, fillTablesController} from "../middleware/contro
 export const creation = Router();
 
 creation
-    .put("/create", createTablesController)
-    .put("/fill", fillTablesController);
+ .put("/create", createTablesController)
+ .put("/fill", fillTablesController);
