@@ -18,7 +18,6 @@ export interface ResponseObject<T> {
     },
     error?: string
 }
-
 export interface ActivityItem {
     id?: number,
     name: string,

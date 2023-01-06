@@ -13,7 +13,8 @@ import {
 
 export const getAllActivitiesAdapter = async (req: Request): Promise<ResponseObject<ActivityItem[]>> => {
     return new Promise<ResponseObject<ActivityItem[]>>((resolve, reject) => {
-        const stmt: Statement = serviceDB.prepare(`SELECT * FROM activity`);
+        const stmt: Statement = serviceDB.prepare(`SELECT *
+                                                   FROM activity`);
         if (!stmt) {
             reject(emptyStatementResponse)
         }
@@ -31,8 +32,8 @@ export const getActivityItemAdapter = async (req: Request): Promise<ResponseObje
     return new Promise<ResponseObject<ActivityItem>>((resolve, reject) => {
 
         const stmt: Statement = serviceDB.prepare(`   SELECT *
-                                                            FROM activity
-                                                            WHERE id = ?`);
+                                                      FROM activity
+                                                      WHERE id = ?`);
 
         if (!stmt) {
             reject(emptyStatementResponse)
@@ -51,7 +52,8 @@ export const addActivityAdapter = async (req: Request): Promise<ResponseObject<R
     return new Promise<ResponseObject<RunResult>>((resolve, reject) => {
         const item: ActivityItem = req.body as ActivityItem;
 
-        const stmt: Statement<[string, string, string]> = serviceDB.prepare(`INSERT INTO activity (name, category, description) VALUES (?, ?, ?)`);
+        const stmt: Statement<[string, string, string]> = serviceDB.prepare(`INSERT INTO activity (name, category, description)
+                                                                             VALUES (?, ?, ?)`);
 
         if (!stmt) {
             reject(emptyStatementResponse);
@@ -70,9 +72,9 @@ export const addActivityAdapter = async (req: Request): Promise<ResponseObject<R
 export const getPreviousActivitiesAdapter = async (req: Request): Promise<ResponseObject<ActivityItem[]>> => {
     return new Promise<ResponseObject<ActivityItem[]>>((resolve, reject) => {
         const stmt: Statement = serviceDB.prepare(`SELECT activity.*
-                                                            FROM activity
+                                                   FROM activity
                                                             JOIN history ON activity.id = history.activityId
-                                                            ORDER BY id DESC LIMIT ?`);
+                                                   ORDER BY id DESC LIMIT ?`);
         if (!stmt) {
             reject(emptyStatementResponse)
         }
@@ -89,7 +91,9 @@ export const getPreviousActivitiesAdapter = async (req: Request): Promise<Respon
 export const getCategoryActivityAdapter = async (req: Request): Promise<ResponseObject<ActivityItem[]>> => {
     return new Promise<ResponseObject<ActivityItem[]>>((resolve, reject) => {
 
-        const stmt = serviceDB.prepare<string>(`SELECT * FROM activity WHERE category = ?`);
+        const stmt = serviceDB.prepare<string>(`SELECT *
+                                                FROM activity
+                                                WHERE category = ?`);
 
         if (!stmt) {
             reject(emptyStatementResponse);

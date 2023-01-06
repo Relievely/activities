@@ -1,13 +1,7 @@
 import {Request} from "express";
 import {ReminderItem, ResponseObject} from "../../interfaces";
 import {RunResult, Statement} from "better-sqlite3";
-import {
-    emptyResultResponse,
-    emptyStatementResponse,
-    responseObjectItem,
-    responseObjectItems,
-    serviceDB
-} from "../../helpers";
+import {emptyResultResponse, emptyStatementResponse, responseObjectItem, responseObjectItems, serviceDB} from "../../helpers";
 
 export const getAllReminderAdapter = async (req: Request): Promise<ResponseObject<ReminderItem[]>> => {
     return new Promise<ResponseObject<ReminderItem[]>>((resolve, reject) => {

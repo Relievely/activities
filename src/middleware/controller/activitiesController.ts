@@ -40,4 +40,3 @@ export const getActivityItemController = (req: Request, res: Response<ResponseOb
         .then((response: ResponseObject<ActivityItem>) => res.status(200).json(response))
         .catch((err: Error) => res.status(500).json(responseError(req, err.message)))
 }
-
