@@ -2,7 +2,7 @@ FROM node:lts-alpine
 
 LABEL org.opencontainers.image.source="https://github.com/relievely/activities"
 
-ENV PORT=50015
+ENV PORT=3000
 
 RUN mkdir -p /usr/app
 
