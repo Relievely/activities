@@ -1,8 +1,6 @@
 import {app} from './app';
-import pino from "pino";
+import {infoMessage} from "./logger";
 
 const port = process.env.PORT;
 
-const logger = pino();
-
-app.listen(port, () => logger.info(`Activities service listening on port: ${port}`))
+app.listen(port, () => infoMessage(`Activities service listening on port: ${port}`))
